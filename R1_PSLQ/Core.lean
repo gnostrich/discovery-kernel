@@ -111,9 +111,9 @@ theorem apply_inv (e : ElemOp n) (x : Fin n → ℚ) (s : PSLQState n)
           simp only [Matrix.mul_transvection_apply_same]
           push_cast
           exact Finset.sum_congr rfl fun i _ => by ring
-        · rw [Function.update_of_ne hj']
-          simp only [Matrix.mul_transvection_apply_of_ne (hb := hj')]
-          exact hy j'
+        · rw [Function.update_of_ne hj', hy j']
+          refine Finset.sum_congr rfl fun i _ => ?_
+          rw [Matrix.mul_transvection_apply_of_ne k j i j' hj' q s.B]
       · rw [mul_assoc, ← mul_assoc (Matrix.transvection k j q),
           Matrix.transvection_mul_transvection_same k j hkj q (-q), add_neg_cancel,
           Matrix.transvection_zero, one_mul, hBl]
@@ -121,16 +121,15 @@ theorem apply_inv (e : ElemOp n) (x : Fin n → ℚ) (s : PSLQState n)
           Matrix.transvection_mul_transvection_same k j hkj (-q) q, neg_add_cancel,
           Matrix.transvection_zero]
   | swap j k =>
-    refine ⟨fun j' => ?_, ?_, ?_⟩
+    rw [apply]
+    refine ⟨fun j' => ?_, ?_, ?_⟩ <;> dsimp only
     · simpa using hy (Equiv.swap j k j')
     · have h1 := Matrix.submatrix_mul_equiv s.B s.Binv id (Equiv.swap j k) id
       rw [hBl] at h1
-      rw [apply]
       simpa using h1
     · have h2 := Matrix.submatrix_mul_equiv s.Binv s.B (⇑(Equiv.swap j k))
         (Equiv.refl (Fin n)) (⇑(Equiv.swap j k))
       rw [hBr] at h2
-      rw [apply]
       simpa [Matrix.submatrix_one_equiv] using h2
 
 end ElemOp
@@ -180,7 +179,7 @@ theorem PSLQState.report?_spec {x : Fin n → ℚ} {s : PSLQState n}
       have h1 : (s.Binv * s.B) j j = (1 : Matrix (Fin n) (Fin n) ℤ) j j := by
         rw [hBr]
       rw [Matrix.mul_apply] at h1
-      simp [hcol, Matrix.one_apply] at h1
+      simp [hcol] at h1
     · calc ∑ i, (((fun i => s.B i j) i : ℚ)) * x i
           = ∑ i, x i * (s.B i j : ℚ) :=
             Finset.sum_congr rfl fun i _ => mul_comm _ _
