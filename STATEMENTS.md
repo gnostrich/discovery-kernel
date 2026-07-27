@@ -6,21 +6,15 @@ anything `Challenge.lean` does not state. If a statement must change, it
 changes in `Challenge.lean` and here first, with a dated note in the
 changelog at the bottom.
 
+Sibling repositories (this repo makes no claims about their content):
+
+* `gnostrich/realization-lean` — owns the scalar license (Kronecker
+  realizability, rank stabilization, Kalman uniqueness, and related spine).
+* `gnostrich/certified-positivity` — frozen prior art (read/cite/import
+  only): decidable-check-soundness (`checkPDq_sound`) and expand/halt
+  certificate schemas.
+
 ## Statements (verbatim from Challenge.lean)
-
-### R0 — scalar license (Kronecker 1881)
-
-```lean
-theorem hankel_finite_rank_iff_rational
-    {K : Type} [Field K] (a : ℕ → K) :
-    R0.HasFiniteHankelRank K a ↔ R0.IsRationalGF K a := sorry
-```
-
-```lean
-theorem rational_iff_finitely_many_atoms
-    {K : Type} [Field K] [IsAlgClosed K] [CharZero K] (a : ℕ → K) :
-    R0.IsRationalGF K a ↔ R0.IsFinitelyAtomic K a := sorry
-```
 
 ### R1 — PSLQ
 
@@ -49,13 +43,6 @@ theorem pslq_empirical_sound
         R1.IsIntRelation x m) := sorry
 ```
 
-### R2 — detector interface
-
-```lean
-theorem discovery_kernel_inhabited :
-    Nonempty (DiscoveryKernel (List ℚ) ℕ) := sorry
-```
-
 ### R3 — operator-valued license (STATEMENTS ONLY)
 
 ```lean
@@ -82,8 +69,12 @@ definitional layer, under the operator-review gate — see changelog.)*
   (left modules instead of bimodules; atoms and weights abstracted to ring
   elements; no positivity, no von Neumann algebra, no conditional
   expectation).
-* **No claim that the R2 abstraction is a contribution.** `DiscoveryKernel` is
-  organizing scaffolding.
+* **No scalar-license (Kronecker) claim in this repository.** That material
+  lives in `gnostrich/realization-lean`; it is not duplicated here.
+* **No abstract detector interface.** No `DiscoveryKernel`-style abstraction
+  is designed up front; if ever wanted, it gets extracted from working
+  instances elsewhere. (An earlier draft interface was descoped 2026-07-27;
+  see changelog.)
 * **No floating-point claims.** Everything is exact arithmetic (ℚ, ℤ) or
   interval-/rational-certified statements about real quantities. No `Float`
   appears in any statement.
@@ -91,19 +82,26 @@ definitional layer, under the operator-review gate — see changelog.)*
   Isabelle/HOL (Thiemann et al., 2018–2020) and announced for Lean via the
   Hex library (FLoC 2026); see `R1_PSLQ/DEPS.md` for what this repository
   does and does not depend on.
-* **No claim about the measure-theoretic (positive) Kronecker theorem.** The
-  R0 atomic statement is the exponential-polynomial ("atoms with
-  multiplicity") normal form over an algebraically closed field of
-  characteristic zero, not the positive-measure moment-problem version.
 * **No claim to formalize floating-point PSLQ as implemented in practice.**
   We formalize an exact-arithmetic PSLQ-class core in the CSV/HJLS
   normalization (Chen–Stehlé–Villard: equivalent to PSLQ up to scaling),
   because textbook PSLQ's `H`-matrix is irrational even on rational input.
+* **No claims about sibling repositories.** `certified-positivity` is frozen
+  prior art; `realization-lean` is under construction; this repo cites and
+  may import them but claims nothing on their behalf.
 
 ## Changelog
 
-* 2026-07-27 — FREEZE-0. Initial registry. `pslq_partial_correct`,
-  `pslq_lower_bound`, `ov_completeness` are typed `True` placeholders pending
-  their tier definitional layers (algorithm core, R3 vocabulary); their
-  target statements are recorded in their docstrings. All other headlines are
+* 2026-07-27 — FREEZE-0. Initial registry (then four tiers).
+  `pslq_partial_correct`, `pslq_lower_bound`, `ov_completeness` typed `True`
+  placeholders pending their tier definitional layers; all other headlines
   stated in full.
+* 2026-07-27 — **DESCOPE (operator steering directive).** R0 (scalar
+  license / Kronecker) and R2 (`DiscoveryKernel` interface) removed from this
+  repository: the scalar license is owned by `gnostrich/realization-lean`;
+  no abstract interface is designed up front. Removed headlines:
+  `hankel_finite_rank_iff_rational`, `rational_iff_finitely_many_atoms`
+  (relocated in realization-form to realization-lean),
+  `discovery_kernel_inhabited` (dropped; the completed R2 artifact — frozen
+  signature, lemma library, zero-sorry toy instance — is preserved in git
+  history at the pre-descope commit). R1 and R3 statements are unchanged.

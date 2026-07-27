@@ -9,22 +9,6 @@
 #   tier            - owning tier
 
 [[headline]]
-name = "hankel_finite_rank_iff_rational"
-challenge = "DiscoveryKernels.Challenge.hankel_finite_rank_iff_rational"
-solution = ""
-module = ""
-proven_required = true
-tier = "R0"
-
-[[headline]]
-name = "rational_iff_finitely_many_atoms"
-challenge = "DiscoveryKernels.Challenge.rational_iff_finitely_many_atoms"
-solution = ""
-module = ""
-proven_required = true
-tier = "R0"
-
-[[headline]]
 name = "pslq_partial_correct"
 challenge = "DiscoveryKernels.Challenge.pslq_partial_correct"
 solution = ""
@@ -47,14 +31,6 @@ solution = ""
 module = ""
 proven_required = true
 tier = "R1"
-
-[[headline]]
-name = "discovery_kernel_inhabited"
-challenge = "DiscoveryKernels.Challenge.discovery_kernel_inhabited"
-solution = ""
-module = ""
-proven_required = true
-tier = "R2"
 
 [[headline]]
 name = "ov_license"

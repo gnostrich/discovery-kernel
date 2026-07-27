@@ -8,8 +8,11 @@ This file IS the set of claims of this repository. Prose (README,
 STATEMENTS.md) never claims anything this file does not state.
 
 Rules of this file:
-* Four append-only tier sections, delimited below. No agent edits another
-  tier's section.
+* Two append-only tier sections (R1, R3), delimited below. No agent edits
+  another tier's section. (R0 and R2 were descoped 2026-07-27 — the scalar
+  license lives in the sibling repo `gnostrich/realization-lean`, and no
+  abstract detector interface is designed up front; see STATEMENTS.md
+  changelog.)
 * Every headline here is stated with `:= sorry` — permanently. Solutions live
   in the tier directories and are checked against these statements by
   `comparator/` (definitional-equality check + per-theorem axiom allowlist).
@@ -17,29 +20,10 @@ Rules of this file:
 * Statement changes after FREEZE-0 are recorded in STATEMENTS.md with a dated
   note.
 -/
-import R0_Kronecker.Defs
 import R1_PSLQ.Defs
-import R2_Detector.Defs
 import R3_OV.Defs
 
 namespace DiscoveryKernels.Challenge
-
--- ==== R0 ==== scalar license (Kronecker 1881) =============================
-
-/-- **Kronecker's theorem, rank half.** A sequence over a field has finite
-Hankel rank iff its generating function is rational. Kronecker (1881); Peller,
-*Hankel Operators*, Ch. 1. -/
-theorem hankel_finite_rank_iff_rational
-    {K : Type} [Field K] (a : ℕ → K) :
-    R0.HasFiniteHankelRank K a ↔ R0.IsRationalGF K a := sorry
-
-/-- **Kronecker's theorem, atomic half.** Over an algebraically closed field of
-characteristic zero, the generating function of `a` is rational iff `a` is
-finitely atomic (exponential-polynomial normal form, atoms with multiplicity
-= partial fractions / characteristic roots of a linear recurrence). -/
-theorem rational_iff_finitely_many_atoms
-    {K : Type} [Field K] [IsAlgClosed K] [CharZero K] (a : ℕ → K) :
-    R0.IsRationalGF K a ↔ R0.IsFinitelyAtomic K a := sorry
 
 -- ==== R1 ==== PSLQ: exact core, termination, empirical input ==============
 
@@ -78,15 +62,6 @@ theorem pslq_empirical_sound
       ((∀ k : Fin n → ℤ, k ≠ 0 → (∀ i, |k i| ≤ M) →
           ∑ i, (k i : ℝ) * x i = 0 ∨ (n : ℝ) * (M : ℝ) * p < |∑ i, (k i : ℝ) * x i|) →
         R1.IsIntRelation x m) := sorry
-
--- ==== R2 ==== the DiscoveryKernel interface ===============================
-
-/-- **Inhabitability of the interface.** There is a discovery kernel on a
-nontrivial state space whose license is sound; witnessed by a paper-thin toy
-instance (drop = an exact zero found in a finite rational list). This is
-scaffolding, not a contribution (see STATEMENTS.md). -/
-theorem discovery_kernel_inhabited :
-    Nonempty (DiscoveryKernel (List ℚ) ℕ) := sorry
 
 -- ==== R3 ==== operator-valued license — STATEMENTS ONLY ===================
 

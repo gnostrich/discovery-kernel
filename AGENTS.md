@@ -1,24 +1,37 @@
 # AGENTS.md — orchestration charter (repo root)
 
-This repository is developed by an orchestrator and four persistent tier
-agents. Each tier directory carries its own `AGENTS.md` (agent charter +
-persistent MEMORY log) and `TIER-STATUS.md` (current state). Agents read
-their charter and memory at session start and append to MEMORY after every
-significant step, so work survives across sessions.
+This repository is developed by an orchestrator and persistent tier agents.
+Each tier directory carries its own `AGENTS.md` (agent charter + persistent
+MEMORY log) and `TIER-STATUS.md` (current state). Agents read their charter
+and memory at session start and append to MEMORY after every significant
+step, so work survives across sessions.
+
+## Project constellation (revised scope, 2026-07-27)
+
+| Repo | Role | Status |
+|------|------|--------|
+| `gnostrich/discovery-kernel` (this) | R1 (PSLQ) + R3 (OV statements) | active |
+| `gnostrich/realization-lean` | scalar license: Kronecker realizability, rank stabilization, Kalman uniqueness, no-go, pole deletion, sym⊕skew decomposition, counterexample locks | active (Agent A) |
+| `gnostrich/certified-positivity` | prior art: `checkPDq_sound` (decidable check proven sound), rational-enclosure / margin-transfer schemas, expand/halt certificates | **FROZEN — read/cite/import only, NEVER edit** |
+
+R0 and R2 were descoped from this repo (see STATEMENTS.md changelog). No
+abstract detector interface is designed up front; if ever wanted it gets
+extracted from working instances (realization-lean's rank stabilization,
+certified-positivity's expand/halt), not designed in advance.
 
 ## Tier ownership (hard rule)
 
 | Agent | Owns | Challenge.lean section |
 |-------|------|------------------------|
-| R0    | `R0_Kronecker/` | `-- ==== R0 ====` |
 | R1    | `R1_PSLQ/`      | `-- ==== R1 ====` |
-| R2    | `R2_Detector/`  | `-- ==== R2 ====` |
 | R3    | `R3_OV/`        | `-- ==== R3 ====` |
 
 An agent edits ONLY its own tier directory, its own Challenge.lean section
 (append-only; statement changes require a dated STATEMENTS.md changelog
 entry first), its own rows of STATEMENTS.md/comparator TOMLs, and its own
-`AGENTS.md`/`TIER-STATUS.md`. Nothing else.
+`AGENTS.md`/`TIER-STATUS.md`. Nothing else. Agent A owns the entire
+`realization-lean` working copy (`/workspace/realization-lean`) and nothing
+in this repo.
 
 ## Standing policies (non-negotiable, from the project directive)
 
@@ -34,9 +47,10 @@ entry first), its own rows of STATEMENTS.md/comparator TOMLs, and its own
    front, interpretation rules fixed before running, a harness-validity cell
    that must pass or the run is void, one-page deliverable, verdict terminal.
 5. **Exact arithmetic only.** No `Float` in any statement.
-6. **FREEZE-1**: the `DiscoveryKernel` signature in `R2_Detector/Defs.lean`
-   is frozen. A signature change requires halting and filing
-   `R2_Detector/CHANGE-REQUESTS.md`; the orchestrator arbitrates.
+6. **R3 human-review gate.** R3 Challenge.lean entries merge only after
+   operator approval, posted via TIER-STATUS.md.
+7. **certified-positivity is frozen.** Read it, cite it, import from it —
+   never edit it.
 
 ## Aristotle (Harmonic) usage
 

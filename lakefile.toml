@@ -1,5 +1,5 @@
 name = "DiscoveryKernels"
-defaultTargets = ["Challenge", "R0_Kronecker", "R1_PSLQ", "R2_Detector", "R3_OV"]
+defaultTargets = ["Challenge", "R1_PSLQ", "R3_OV"]
 
 [leanOptions]
 autoImplicit = false
@@ -13,16 +13,8 @@ rev = "v4.32.0"
 name = "Challenge"
 
 [[lean_lib]]
-name = "R0_Kronecker"
-globs = ["R0_Kronecker.+"]
-
-[[lean_lib]]
 name = "R1_PSLQ"
 globs = ["R1_PSLQ.+"]
-
-[[lean_lib]]
-name = "R2_Detector"
-globs = ["R2_Detector.+"]
 
 [[lean_lib]]
 name = "R3_OV"
