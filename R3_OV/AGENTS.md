@@ -39,3 +39,25 @@ failing CI.
 * 2026-07-27 — Tier initialized at FREEZE-0 with draft `Defs.lean`
   (simplification flags in docstrings) and a draft `ov_license` shape in
   Challenge.lean; both count as PENDING HUMAN REVIEW.
+* 2026-07-27 — Mathlib v4.32 survey delivered (`VOCAB.md`): C*-positivity
+  language, `FreeAlgebra`/`FreeMonoid`+word basis, f.g.-module framework
+  EXIST; vN algebras are a bare skeleton; operator-algebraic `E_B`, OV
+  measures/atoms, recognizable series/Hankel MUST-DEFINE; free probability
+  absent (OUT-OF-SCOPE, abstracted into hypotheses).
+* 2026-07-27 — DECISION: FREEZE-0 `ov_license` judged unkeepable as stated:
+  (a) span-of-shifts f.g. rank def has a Noetherian gap vs realizations —
+  replaced by Fliess stable-submodule form (`HasFiniteOVHankelRankStable`);
+  (b) unconditional realization ⟺ atomic is FALSE (cos nθ over ℝ; Jordan
+  block n·λⁿ over ℂ) — positivity hypotheses added (`IsOVMomentSequence`,
+  `StarOrderedRing`), atomicity star-corrected (`IsFinitelyAtomicOVStar`,
+  atoms-in-B kept deliberately — L∞[0,1] rank-1 diffuse-scalarization
+  witness). Details in `CHALLENGE-R3.proposed.md`.
+* 2026-07-27 — New defs in `Vocab.lean` (extends `Defs.lean` untouched, so
+  live Challenge.lean semantics unchanged); refined `ov_license` +
+  first real `ov_completeness` (alignment ⇒ structural cause; genericity =
+  faithfulness of `E` + self-adjoint tuple; degree-local cause) stated in
+  `CHALLENGE-R3.proposed.lean` — compiles with exactly 2 sorry warnings;
+  `lake build R3_OV` and `lake build Challenge` green (proposal builds as
+  module `R3_OV.«CHALLENGE-R3.proposed»` under the glob). Proposals posted
+  under PENDING HUMAN REVIEW in `TIER-STATUS.md`; merge held for operator.
+  Aristotle not used (statements-only tier; nothing to prove).
