@@ -27,8 +27,8 @@ tier = "R1"
 [[headline]]
 name = "pslq_empirical_sound"
 challenge = "DiscoveryKernels.Challenge.pslq_empirical_sound"
-solution = ""
-module = ""
+solution = "DiscoveryKernels.R1.pslq_empirical_sound"
+module = "R1_PSLQ.Empirical"
 proven_required = true
 tier = "R1"
 
