@@ -44,3 +44,19 @@ fill your rows of `comparator/headlines.toml`.
 * 2026-07-27 — Tier initialized at FREEZE-0. Orchestrator note: no Aristotle
   MCP server exists in this session; use `scripts/aristotle.py` (API key in
   env). Hex verdict pending.
+* 2026-07-27 — DEPS verdict written: **HEX-UNAVAILABLE** for this repo's pin.
+  Hex is real (github.com/leanprover/hex, Apache-2.0, FLoC 2026) but pins
+  Lean v4.32.0-rc1 + Mathlib v4.32.0-rc1-patch1 vs our v4.32.0 final — hard
+  Lake graph conflict; also fit is partial (LLL/ℤ vs PSLQ-HJLS/ℚ). Fallback:
+  self-contained rational linear algebra on plain Mathlib. Proofs unblocked.
+* 2026-07-27 — EARLY WIN LANDED: `DiscoveryKernels.R1.pslq_empirical_sound`
+  proven in R1_PSLQ/Empirical.lean (statement copied verbatim from
+  Challenge.lean; `lake build R1_PSLQ` green; axioms = [propext,
+  Classical.choice, Quot.sound] — exactly the default allowlist). No sorry.
+* 2026-07-27 — STEERING CHANGE received: R2 dropped (no DiscoveryKernel
+  instance), R0 moved out. Two new DEPS blockers completed: (a)
+  certified-positivity studied → ADAPT verdict (checkPDq_sound Bool-check +
+  soundness schema, margin transfer; no import, v4.28.0 pin); (b) prior-art
+  negative recorded — no PSLQ formalization in any proof assistant (3 web
+  searches, terms in DEPS.md). Interim status posted in TIER-STATUS.md.
+  Resuming strict order: core + partial correctness next.
