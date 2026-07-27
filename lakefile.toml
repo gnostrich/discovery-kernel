@@ -1,5 +1,5 @@
 name = "DiscoveryKernels"
-defaultTargets = ["Challenge", "R1_PSLQ", "R3_OV"]
+defaultTargets = ["Challenge", "Conditioning", "R1_PSLQ", "R3_OV"]
 
 [leanOptions]
 autoImplicit = false
@@ -11,6 +11,14 @@ rev = "v4.32.0"
 
 [[lean_lib]]
 name = "Challenge"
+
+[[lean_lib]]
+name = "Conditioning"
+# Explicit module list, not a glob: `Conditioning/CHALLENGE-COND.proposed.lean`
+# is a proposal document (six by-design `sorry`s, and not a legal module name),
+# and must not be elaborated as part of the library.
+globs = ["Conditioning.Defs", "Conditioning.Gershgorin", "Conditioning.Margin",
+         "Conditioning.Checker", "Conditioning.Sharpness", "Conditioning.Bridge"]
 
 [[lean_lib]]
 name = "R1_PSLQ"

@@ -122,11 +122,79 @@ condition number, which is occupied literature (Skeel/Rohn/Higham — see
 formulation together with the anti-lattice obstruction that no literature was
 found to have.
 
-### Conditioning — the headline tier
+### Conditioning — the headline tier (Σ = singular matrices)
 
-Statements are in preparation; they land in `Challenge.lean` (first section,
-ahead of PSLQ) when the tier's proposals are reviewed. Nothing is claimed
-here until then.
+All six are **PROVEN**, sorry-free, axioms `[propext, Classical.choice,
+Quot.sound]`, no `Float`, no `native_decide`, no allowlist extension.
+
+```lean
+theorem cond_check_sound {n : ℕ} (A : Matrix (Fin n) (Fin n) ℚ) (c : ℚ)
+    (h : Cond.condCheck A c = true) :
+    Cond.SigmaMinGE (Cond.toReal A) (c : ℝ) := sorry
+```
+→ `DiscoveryKernels.Cond.condCheck_sound` (`Conditioning/Checker.lean`).
+
+```lean
+section L2OperatorNormScope
+open scoped Matrix.Norms.L2Operator
+theorem cond_dist_to_illposed {n : ℕ} (A : Matrix (Fin n) (Fin n) ℚ) (c : ℚ)
+    (hn : 0 < n) (h : Cond.condCheck A c = true) :
+    (c : ℝ) ≤ Metric.infDist (Cond.toReal A) (Cond.SigmaSing n) := sorry
+end L2OperatorNormScope
+```
+→ `DiscoveryKernels.Cond.condCheck_le_infDist` (`Conditioning/Bridge.lean`).
+**The headline**: an executable exact-rational check certifies a lower bound
+on Mathlib's own `Metric.infDist` in Mathlib's own ℓ² operator norm. The
+`open scoped` is confined to this one declaration on purpose — that instance
+is not Mathlib's default `Matrix` norm, and removing the `open` silently
+states a different theorem about a different norm.
+
+```lean
+theorem cond_licenses_computation {n : ℕ} (A : Matrix (Fin n) (Fin n) ℚ) (c : ℚ)
+    (h : Cond.condCheck A c = true) (x y b b' : Fin n → ℝ)
+    (hx : Cond.toReal A *ᵥ x = b) (hy : Cond.toReal A *ᵥ y = b') (ε : ℝ)
+    (hε : Cond.sqNorm (b - b') ≤ ε ^ 2) :
+    (c : ℝ) ^ 2 * Cond.sqNorm (x - y) ≤ ε ^ 2 := sorry
+```
+→ `DiscoveryKernels.Cond.condCheck_licenses_solve` (`Conditioning/Checker.lean`).
+The tier's point: a certified margin converts input accuracy into output
+accuracy. Stated squared so no square roots and no `Float` appear.
+
+```lean
+theorem cond_eigenvalue_margin {n : ℕ} (A : Matrix (Fin n) (Fin n) ℚ) (c : ℚ)
+    (h : Cond.condCheck A c = true) (hA : (Cond.toReal A).IsHermitian) (j : Fin n) :
+    (c : ℝ) ≤ |hA.eigenvalues j| := sorry
+```
+→ `DiscoveryKernels.Cond.condCheck_hermitian_eigenvalue_margin`
+(`Conditioning/Bridge.lean`).
+
+```lean
+theorem cond_margin_sharp :
+    Cond.condCheck Cond.diagA 3 = true ∧
+      Cond.DistGE (Cond.toReal Cond.diagA) 3 ∧
+      (∀ c : ℝ, 3 < c → ¬ Cond.DistGE (Cond.toReal Cond.diagA) c) ∧
+      (∀ c : ℚ, Cond.condCheck Cond.diagA c = true → c ≤ 3) := sorry
+```
+→ `DiscoveryKernels.Cond.diag_dist_exact` (`Conditioning/Sharpness.lean`).
+**Sharpness witness 1**: on `!![3,0;0,5]` the checker's output is exactly 3
+and `dist(A, Σ) = 3` on the nose — tight, not conservative. The upper bound
+comes from an explicit certified perturbation landing in `Σ`, so nothing here
+uses Eckart–Young.
+
+```lean
+theorem cond_gershgorin_wall :
+    Cond.gramQ Cond.wallA 0 0 - Cond.gershRadiusQ (Cond.gramQ Cond.wallA) 0 = 0 ∧
+      (∀ c : ℚ, Cond.condCheck Cond.wallA c = true → c = 0) ∧
+      Cond.DistGE (Cond.toReal Cond.wallA) (1 / 2) := sorry
+```
+→ `DiscoveryKernels.Cond.gershgorin_wall` (`Conditioning/Sharpness.lean`).
+**Sharpness witness 2**: on the unimodular shear `!![1,1;0,1]` the
+diagonal-dominance margin is *exactly zero* — an equality between exact
+rationals, so no sharper enclosure helps — forcing the checker to `c = 0`,
+which is provably vacuous (`distGE_zero_vacuous`); yet the input is genuinely
+well-posed, `dist ≥ 1/2`. The zero is a property of the **engine**, not the
+input. Contrast `Cond.singular_dist_zero`, where a reported zero is the truth;
+certifying both is what makes a reported floor interpretable.
 
 ## Status of every `sorry`
 
@@ -227,3 +295,16 @@ Per STEERING 02, sorries are classified:
   condition number; the OV tier is on notice for the named collapse test.
 * 2026-07-27 — **Conditioning tier opened** as the headline claim, with
   `Conditioning/SWEEP.md` (S1, S2) committed before any Lean in that tier.
+* 2026-07-27 — **Conditioning section landed FIRST in `Challenge.lean`**, ahead
+  of PSLQ: which claim leads is itself a claim. Six headlines added, all
+  proven and comparator-audited. Architectural note: the tier routes every
+  bound through `σ_min(A) ≥ c`, obtained by running a from-scratch Gershgorin
+  argument on the **exact rational Gram matrix** `AᵀA`. This covers arbitrary
+  square matrices rather than only symmetric ones, and it **avoids
+  Eckart–Young entirely** — deliberately, because sweep S1 found that theorem
+  already formalized in Lean 4 elsewhere. Nothing in this tier claims or uses
+  it.
+* 2026-07-27 — **OV element-valued thesis refuted** (proved, see the OV
+  section). The tier's founding claim — that the operator-valued condition
+  number is an element of `B` — is disproved for every factor; `dist_B` is a
+  certificate set. Recorded as a claim in its own right.

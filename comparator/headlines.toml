@@ -9,6 +9,54 @@
 #   tier            - owning tier
 
 [[headline]]
+name = "cond_check_sound"
+challenge = "DiscoveryKernels.Challenge.cond_check_sound"
+solution = "DiscoveryKernels.Cond.condCheck_sound"
+module = "Conditioning.Checker"
+proven_required = true
+tier = "COND"
+
+[[headline]]
+name = "cond_dist_to_illposed"
+challenge = "DiscoveryKernels.Challenge.cond_dist_to_illposed"
+solution = "DiscoveryKernels.Cond.condCheck_le_infDist"
+module = "Conditioning.Bridge"
+proven_required = true
+tier = "COND"
+
+[[headline]]
+name = "cond_licenses_computation"
+challenge = "DiscoveryKernels.Challenge.cond_licenses_computation"
+solution = "DiscoveryKernels.Cond.condCheck_licenses_solve"
+module = "Conditioning.Checker"
+proven_required = true
+tier = "COND"
+
+[[headline]]
+name = "cond_eigenvalue_margin"
+challenge = "DiscoveryKernels.Challenge.cond_eigenvalue_margin"
+solution = "DiscoveryKernels.Cond.condCheck_hermitian_eigenvalue_margin"
+module = "Conditioning.Bridge"
+proven_required = true
+tier = "COND"
+
+[[headline]]
+name = "cond_margin_sharp"
+challenge = "DiscoveryKernels.Challenge.cond_margin_sharp"
+solution = "DiscoveryKernels.Cond.diag_dist_exact"
+module = "Conditioning.Sharpness"
+proven_required = true
+tier = "COND"
+
+[[headline]]
+name = "cond_gershgorin_wall"
+challenge = "DiscoveryKernels.Challenge.cond_gershgorin_wall"
+solution = "DiscoveryKernels.Cond.gershgorin_wall"
+module = "Conditioning.Sharpness"
+proven_required = true
+tier = "COND"
+
+[[headline]]
 name = "pslq_partial_correct"
 challenge = "DiscoveryKernels.Challenge.pslq_partial_correct"
 solution = "DiscoveryKernels.R1.pslq_partial_correct"

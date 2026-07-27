@@ -57,10 +57,17 @@ def quadForm (M : Matrix (Fin n) (Fin n) ℝ) (x : Fin n → ℝ) : ℝ :=
 
 At a singular matrix the answer to "invert this" is discontinuous in the data
 (indeed undefined), and an arbitrarily small perturbation changes it; this is
-the canonical instance of Demmel's `Σ`. For a *symmetric* matrix, membership
-in `Σ` is exactly the existence of a zero eigenvalue, so the distance to `Σ`
-computed below is simultaneously the distance to the symmetric-singular set
-`{S | Sᵀ = S ∧ S has a zero eigenvalue}`. -/
+the canonical instance of Demmel's `Σ`. Membership in `Σ` is equivalent to
+having `0` as an eigenvalue, so for symmetric inputs this is the ill-posed set
+of the symmetric eigenvalue problem as well.
+
+Scope note, stated so nothing is overclaimed: `Σ` here is **all** singular
+matrices, and `DistGE` below quantifies over **all** perturbations. Since the
+symmetric-singular set is a subset of `Σ`, every lower bound on `dist(·, Σ)`
+proved in this tier is a fortiori a lower bound on the distance to the
+symmetric-singular set — which is the direction that licenses a computation.
+That the two distances *coincide* for symmetric inputs is true but is **not
+proved here and never used**. -/
 def SigmaSing (n : ℕ) : Set (Matrix (Fin n) (Fin n) ℝ) := {S | S.det = 0}
 
 /-- `‖E‖₂ ≤ b`: the spectral (ℓ² operator) norm of `E` is at most `b`, written
