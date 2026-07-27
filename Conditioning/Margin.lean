@@ -77,7 +77,7 @@ theorem abs_eigenvalue_ge_of_sigmaMinGE {A : Matrix (Fin n) (Fin n) ℝ} {c : �
   rw [hAv, sqNorm_smul] at h1
   have h2 := sqNorm_pos hv
   have hle : c ^ 2 ≤ l ^ 2 := le_of_mul_le_mul_right h1 h2
-  nlinarith [hle, sq_abs l, abs_nonneg l]
+  nlinarith [hle, sq_abs l, abs_nonneg l, hc]
 
 /-- **The distance theorem** (lower bound direction of the Condition Number
 Theorem for `Σ = ` singular matrices).

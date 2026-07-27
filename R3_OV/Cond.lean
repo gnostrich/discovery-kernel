@@ -151,6 +151,21 @@ theorem margin_imp_distanceCertificate {n : ℕ} (x : Matrix (Fin n) (Fin n) B) 
   rw [hxy]
   exact h.2 ξ
 
+/-- **Certified margin ⇒ certified solve (proved).** If `b` is a certified
+`B`-valued margin for an invertible `x`, then the solve operator `x⁻¹` is
+bounded in the `B`-valued Rayleigh form by `b`: `⟨x⁻¹η, b x⁻¹η⟩ ≤ ⟨η, η⟩`.
+This is the operator-valued form of the licensing half of the Condition
+Number Theorem, `‖x⁻¹‖ ≤ 1/dist(x, Σ)` (Demmel 1987): a certified margin
+bounds the error amplification of the computation. NOTE (reported honestly in
+R3_OV/CHALLENGE-R3.proposed.md): the argument is the scalar one verbatim —
+the mathematical weight of the `B`-valued theory sits in the DEFINITION of
+the margin, not in this inequality. -/
+theorem margin_imp_inverse_bound {n : ℕ} (u : (Matrix (Fin n) (Fin n) B)ˣ) (b : B)
+    (h : IsMargin B (u : Matrix (Fin n) (Fin n) B) b) (η : Fin n → B) :
+    ovRayleigh B b ((↑u⁻¹ : Matrix (Fin n) (Fin n) B) *ᵥ η) ≤ ovInner B η η := by
+  have hb := h.2 ((↑u⁻¹ : Matrix (Fin n) (Fin n) B) *ᵥ η)
+  rwa [Matrix.mulVec_mulVec, u.mul_inv, Matrix.one_mulVec] at hb
+
 end CNT
 
 /-! ## The decisive structural reduction: diagonal `x` -/
