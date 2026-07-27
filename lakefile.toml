@@ -1,0 +1,29 @@
+name = "DiscoveryKernels"
+defaultTargets = ["Challenge", "R0_Kronecker", "R1_PSLQ", "R2_Detector", "R3_OV"]
+
+[leanOptions]
+autoImplicit = false
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.32.0"
+
+[[lean_lib]]
+name = "Challenge"
+
+[[lean_lib]]
+name = "R0_Kronecker"
+globs = ["R0_Kronecker.+"]
+
+[[lean_lib]]
+name = "R1_PSLQ"
+globs = ["R1_PSLQ.+"]
+
+[[lean_lib]]
+name = "R2_Detector"
+globs = ["R2_Detector.+"]
+
+[[lean_lib]]
+name = "R3_OV"
+globs = ["R3_OV.+"]

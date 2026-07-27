@@ -1,0 +1,73 @@
+# Registry of headline theorems.
+#
+# For each headline:
+#   name            - short name as it appears in Challenge.lean
+#   challenge       - fully qualified constant in Challenge.lean
+#   solution        - fully qualified constant of the tier-side proof ("" until it lands)
+#   module          - Lean module to import to bring the solution into scope ("" if none)
+#   proven_required - whether the mission requires a proof (false only for R3)
+#   tier            - owning tier
+
+[[headline]]
+name = "hankel_finite_rank_iff_rational"
+challenge = "DiscoveryKernels.Challenge.hankel_finite_rank_iff_rational"
+solution = ""
+module = ""
+proven_required = true
+tier = "R0"
+
+[[headline]]
+name = "rational_iff_finitely_many_atoms"
+challenge = "DiscoveryKernels.Challenge.rational_iff_finitely_many_atoms"
+solution = ""
+module = ""
+proven_required = true
+tier = "R0"
+
+[[headline]]
+name = "pslq_partial_correct"
+challenge = "DiscoveryKernels.Challenge.pslq_partial_correct"
+solution = ""
+module = ""
+proven_required = true
+tier = "R1"
+
+[[headline]]
+name = "pslq_lower_bound"
+challenge = "DiscoveryKernels.Challenge.pslq_lower_bound"
+solution = ""
+module = ""
+proven_required = true
+tier = "R1"
+
+[[headline]]
+name = "pslq_empirical_sound"
+challenge = "DiscoveryKernels.Challenge.pslq_empirical_sound"
+solution = ""
+module = ""
+proven_required = true
+tier = "R1"
+
+[[headline]]
+name = "discovery_kernel_inhabited"
+challenge = "DiscoveryKernels.Challenge.discovery_kernel_inhabited"
+solution = ""
+module = ""
+proven_required = true
+tier = "R2"
+
+[[headline]]
+name = "ov_license"
+challenge = "DiscoveryKernels.Challenge.ov_license"
+solution = ""
+module = ""
+proven_required = false
+tier = "R3"
+
+[[headline]]
+name = "ov_completeness"
+challenge = "DiscoveryKernels.Challenge.ov_completeness"
+solution = ""
+module = ""
+proven_required = false
+tier = "R3"

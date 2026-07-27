@@ -1,0 +1,12 @@
+# Per-theorem axiom allowlist for solution headlines.
+#
+# `default` applies to every solution. A solution may extend it ONLY via its
+# own table below, and every extension requires a comment justifying it
+# (e.g. why `native_decide` / `Lean.ofReduceBool` is sound for that theorem).
+# `sorryAx` is never allowed for a solution.
+
+default = ["propext", "Classical.choice", "Quot.sound"]
+
+# Example extension (keep commented until needed):
+# ["DiscoveryKernels.R1.pslq_partial_correct_proof"]
+# extra = ["Lean.ofReduceBool"]  # justification: <required>
