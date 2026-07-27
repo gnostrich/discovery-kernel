@@ -42,7 +42,7 @@ open Matrix
 
 section Forms
 
-variable (B : Type*) [Ring B] [StarRing B] [PartialOrder B]
+variable (B : Type*) [Ring B] [StarRing B]
 
 /-- `B`-valued inner product on the free right `B`-module `Bⁿ`,
 `⟨ξ, η⟩ = ∑ᵢ (ξᵢ)* ηᵢ`. The Hilbert C*-module form (Paschke; Lance,
@@ -58,6 +58,10 @@ def ovRayleigh {n : ℕ} (b : B) (ξ : Fin n → B) : B := ∑ i, star (ξ i) * 
 non-invertible matrices. In the scalar case this is `{det = 0}`, the classical
 `Σ` of Demmel (1987). -/
 def IsIllPosed {n : ℕ} (y : Matrix (Fin n) (Fin n) B) : Prop := ¬ IsUnit y
+
+section Ordered
+
+variable [PartialOrder B]
 
 /-- **`b` is a certified `B`-valued margin for `x`.** `b ≥ 0` and
 `⟨ξ, b ξ⟩ ≤ ⟨xξ, xξ⟩` for every `ξ ∈ Bⁿ`: the `B`-valued lower Rayleigh
@@ -103,13 +107,15 @@ def IsGlobalInfMargin {A : Type*} [Ring A] [StarRing A] (E : A → B) (x : A) (b
     Prop :=
   0 ≤ b ∧ ∀ y : A, ¬ IsUnit y → b ≤ E (star (x - y) * (x - y))
 
+end Ordered
+
 end Forms
 
 /-! ## Elementary computations -/
 
 section Basic
 
-variable {B : Type*} [Ring B] [StarRing B] [PartialOrder B]
+variable {B : Type*} [Ring B] [StarRing B]
 
 @[simp] lemma ovInner_zero {n : ℕ} : ovInner B (0 : Fin n → B) 0 = 0 := by
   simp [ovInner]

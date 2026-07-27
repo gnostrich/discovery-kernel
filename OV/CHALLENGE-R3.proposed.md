@@ -309,6 +309,98 @@ NUMBER should read 3b.3 as a refutation and retire that framing.
 | C4 | no `E_B` appears: with `A = Mₙ(B)` the conditioning is carried by the module structure, so the promised "distance measured in `E_B`" is realized as the `B`-valued inner product, not as a Tomiyama projection | `ovInner` |
 | C5 | κ itself is never formed (it would be `‖x‖·b⁻¹`-shaped and needs `b` invertible); only margins and certificates | `margin_imp_inverse_bound` |
 
+## 3c. STEERING-02a — the symbolic (order-of-vanishing) FALLBACK form
+
+**Marking (required): the metric form of §3b is PRIMARY; the symbolic form
+here is FALLBACK.** The metric form passed its collapse test, so this is a
+structurally different plan B, not a replacement. Deliverables:
+`OV/Symbolic.lean` (definitions + collapse tests, **proved, zero `sorry`**)
+and the proposed headline `ov_lojasiewicz_order` in
+`CHALLENGE-R3.proposed.lean`.
+
+### 3c.1 The symbolic definition
+
+No metric appears anywhere. Three ingredients, instantiated:
+
+1. **Σ as a discriminant** — `R3.IsDegenerateAtZero X` := the fibre `X(0)`
+   (taken coefficientwise, so no `eval` and no commutativity) is
+   non-invertible. Algebraic degeneracy, no distance.
+2. **Perturbation as deformation** — the object is a polynomial family
+   `X : Mₙ(B[t])`; the question is where in the family it degenerates, with
+   the degenerate parameter normalized to `t = 0`.
+3. **Distance as order of vanishing** — for a direction `ξ ∈ Bⁿ`, the
+   direction datum is `t ↦ X(t)ξ` (`R3.ovFamilyImage`) and
+
+   > **`R3.ovVanishingOrder X ξ : ℕ∞` := the trailing degree of the direction
+   > datum** — an INTEGER, recorded per direction, never aggregated.
+
+   Companion data: `R3.ovDatumCoeff` (the order-`j` coefficient vector, the
+   `j`-th "derivative" of the defining data) and `R3.ovLeadingCertificate`
+   (`∑ᵢ cᵢ* cᵢ` at the vanishing order — the `B`-valued constant `c` of
+   `|f| ≥ c·dist^α`, per direction).
+
+Citations: Łojasiewicz (1959; *Ensembles semi-analytiques*, IHES 1965) for
+the inequality and the order-of-vanishing proof in one variable;
+Bierstone–Milman for resolution and Łojasiewicz exponents; Kurdyka (1998) for
+the KL property; Demmel (1987) and Bürgisser–Cucker (2013) for the metric
+counterpart. Occupancy per `OV/SWEEP.md` S3 (binding, not redone): Łojasiewicz
+inequalities with explicit exponents for the smallest-singular-value function
+of real polynomial matrices — including distance-function versions — are
+already published (arXiv 1604.02805; eigenvalue counterpart 1501.01419).
+**No novelty is claimed for that.** Only two things are claimed: the
+noncommutative/algebra-valued setting, and the per-direction exponent tuple.
+
+Simplification flags: (S1) the degenerate parameter is normalized to `t = 0`;
+(S2) the parameter is assumed transversal, so the Łojasiewicz exponent in a
+direction equals the vanishing order rather than a ratio of orders; (S3) one
+parameter only — no multi-parameter resolution; (S4) directions `ξ` are
+constant vectors in `Bⁿ`, not `B[t]`-valued; (S5) `B` is an abstract
+star-ordered ring, and the positivity of the leading certificate needs the
+faithfulness hypothesis `star c * c = 0 → c = 0` (automatic in a C*-algebra),
+carried explicitly in the statement.
+
+### 3c.2 COLLAPSE TEST (symbolic) — RUN, NO COLLAPSE, twice
+
+The sweep makes the collapse test and the occupancy test identical: a
+constant exponent tuple would be both vacuous and the published single-
+exponent object. The test therefore demands a witness with two directions of
+genuinely different vanishing order. Two are proved:
+
+* **Abelian witness** (`R3.exponentTuple_not_constant`): over `B = ℝ × ℝ`,
+  the family `t ↦ (t, t²)` has order `1` in direction `(1,0)` and order `2`
+  in direction `(0,1)`; the fibre at `t = 0` is `0`, so the family really
+  does deform through the discriminant.
+* **Noncommutative witness** (`R3.exponentTuple_not_constant_noncomm`): over
+  `B = M₂(ℝ)`, the family `t ↦ e₁ t + e₂ t²` has order `1` in direction `e₁`
+  and order `2` in direction `e₂`.
+
+**Verdict: the symbolic form survives its collapse test.** The exponent tuple
+is non-constant, so it does not degenerate to a single Łojasiewicz exponent,
+and — unlike the metric form, whose surviving content was confined to
+noncommutative `B` and whose abelian case fell into published componentwise
+conditioning — the symbolic witness is available in the noncommutative
+setting the sweep found unoccupied.
+
+Note the contrast with §3b honestly: the metric form yielded a *refutation*
+(no element-valued `dist_B`), the symbolic form yields a *survival*. Both are
+reported as they came out.
+
+### 3c.3 Boundary: where the symbolic form does NOT apply (not negotiable)
+
+Both forms require the object to sit in a **parametrised family**, and no
+family is invented here to make the machinery fit:
+
+* A single `x ∈ Mₙ(B)` — the object of §3b — has **no** family, no
+  discriminant and no order of vanishing. The symbolic form simply does not
+  apply to it. That is why the two forms are stated side by side rather than
+  one derived from the other.
+* Honest families that do occur: matrix pencils and polynomial matrices
+  (`A₀ + tA₁ + …`), parametrised linear systems, polynomial eigenvalue
+  problems — the same class the published S3 work treats, lifted to `B`.
+* **Closed, and not reopened:** symbolic proof search over a formal proof
+  library. Statements in a library are not parametrised, have no
+  discriminant, and admit no order of vanishing.
+
 ## 4. Merge mechanics (for the orchestrator, post-approval)
 
 1. Move/keep `OV/Vocab.lean` definitions in the R3 definitional layer

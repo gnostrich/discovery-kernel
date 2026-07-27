@@ -18,6 +18,15 @@ DECLARED-OPEN (frontier, no proof claimed).
 * `margin_imp_distanceCertificate`, `margin_imp_inverse_bound` — the easy
   (scalar-verbatim) halves of the `B`-valued Condition Number Theorem.
 
+Symbolic (fallback) form, in `OV/Symbolic.lean` — also no `sorry`:
+
+* `ovVanishingOrder` and the per-direction layer (`ovFamilyImage`,
+  `ovDatumCoeff`, `ovLeadingCertificate`, `IsDegenerateAtZero`).
+* `exponentTuple_not_constant` — abelian witness: orders `1` and `2` in two
+  directions of the family `t ↦ (t, t²)` over `ℝ × ℝ`.
+* `exponentTuple_not_constant_noncomm` — NONCOMMUTATIVE witness: orders `1`
+  and `2` for `t ↦ e₁t + e₂t²` over `M₂(ℝ)`.
+
 ## Sorry ledger (every sorry labelled)
 
 | Statement | File | Label |
@@ -27,6 +36,7 @@ DECLARED-OPEN (frontier, no proof claimed).
 | `ov_condition_number_theorem` (`B`-valued CNT) | `CHALLENGE-R3.proposed.lean` | TARGET (`⇒` already proved; `⇐` = Eckart–Young rank-one) |
 | `ov_cnt_recovers_scalar` (`B = ℝ` ⇒ `λ_min`) | `CHALLENGE-R3.proposed.lean` | TARGET (needs Courant–Fischer, absent from Mathlib — SWEEP S1) |
 | `ov_dist_not_element_valued` (Kadison witness in `M₂(ℝ)`) | `CHALLENGE-R3.proposed.lean` | TARGET (hand-verified exact rational arithmetic in the .md; the reduction it rests on is already proved) |
+| `ov_lojasiewicz_order` (symbolic FALLBACK form) | `CHALLENGE-R3.proposed.lean` | TARGET (order-of-vanishing bookkeeping + faithfulness of the positive cone) |
 | Challenge.lean R3 entries (FREEZE-0 text) | `Challenge.lean` | untouched; superseded by the proposals below |
 
 ## COLLAPSE VERDICT (first-class result, stated plainly)
@@ -52,16 +62,40 @@ DECLARED-OPEN (frontier, no proof claimed).
    itself. Full argument, witnesses and hand-verified arithmetic:
    `OV/CHALLENGE-R3.proposed.md` §3b.
 
+## COLLAPSE VERDICT — SYMBOLIC (fallback) form, STEERING-02a
+
+**NO COLLAPSE — the symbolic form survives, and unlike the metric form it
+survives in the noncommutative setting.** The test (identical to the
+occupancy test per `OV/SWEEP.md` S3: a constant exponent tuple would be both
+vacuous and the published single-exponent object) demanded a witness with two
+directions of different vanishing order. Two are proved:
+
+* `exponentTuple_not_constant` — `B = ℝ × ℝ`, family `t ↦ (t, t²)`, orders
+  `1` and `2` (abelian);
+* `exponentTuple_not_constant_noncomm` — `B = M₂(ℝ)`, family
+  `t ↦ e₁t + e₂t²`, orders `1` and `2` (noncommutative — the case the sweep
+  found unoccupied).
+
+No novelty is claimed for Łojasiewicz-with-explicit-exponents on `σ_min` of
+real polynomial matrices (arXiv 1604.02805, including the distance-function
+versions); the claims are exactly the two properties S3 found missing: the
+algebra-valued setting and the per-direction tuple.
+
+**Boundary held:** both forms need a parametrised family; a single
+`x ∈ Mₙ(B)` has none, and none was invented. Symbolic proof search over a
+proof library remains CLOSED.
+
 ## Delivered files
 
 `VOCAB.md` (Mathlib survey), `Vocab.lean` (OV definitional layer),
-`Cond.lean` (conditioning layer, all proofs complete),
+`Cond.lean` (metric conditioning layer, all proofs complete),
+`Symbolic.lean` (symbolic/Łojasiewicz layer, all proofs complete),
 `CHALLENGE-R3.proposed.{lean,md}`. `lake build OV` and
 `lake build Challenge` green; `Challenge.lean` untouched.
 
 ## PENDING HUMAN REVIEW
 
-All five statements below are PROPOSALS (R3 charter hard gate); the
+All six statements below are PROPOSALS (R3 charter hard gate); the
 orchestrator holds the merge until the operator approves. Justification,
 counterexamples and the collapse verdict: `CHALLENGE-R3.proposed.md`;
 definitions: `OV/Vocab.lean`, `OV/Cond.lean` (both extend, and do not
@@ -122,8 +156,28 @@ theorem ov_dist_not_element_valued :
         ¬ R3.IsBValuedDistance (Matrix (Fin 2) (Fin 2) ℝ) x b := sorry
 ```
 
+### Proposed `ov_lojasiewicz_order` (symbolic FALLBACK form, STEERING-02a)
+
+```lean
+theorem ov_lojasiewicz_order
+    {B : Type} [Ring B] [StarRing B] [PartialOrder B] [StarOrderedRing B]
+    (hfaith : ∀ c : B, star c * c = 0 → c = 0)
+    {n : ℕ} (X : Matrix (Fin n) (Fin n) (Polynomial B))
+    (hdeg : R3.IsDegenerateAtZero B X)
+    (ξ : Fin n → B) (k : ℕ)
+    (hk : R3.ovVanishingOrder B X ξ = (k : ℕ∞)) :
+    (∀ j < k, R3.ovDatumCoeff B X ξ j = 0) ∧
+      0 < R3.ovLeadingCertificate B X ξ k := sorry
+```
+
+PRIMARY = the metric statements above; FALLBACK = this one. The marking is
+also carried in the proposal file's section headers.
+
 Reviewer decision points: (1) complete vs level-1 positivity in
 `OVHankelPSD`; (2) restrict `B` to a C*-algebra in `ov_license`'s second
 chain; (3) atoms in matrix amplifications `Mₙ(B)`; (4) scalar vs `B`-valued
 alignment coefficients; (5) **whether the tier keeps the certificate-set
-framing, given that the element-valued framing is refuted (§3b.3)**.
+framing, given that the element-valued framing is refuted (§3b.3)**;
+(6) whether the symbolic fallback is promoted alongside the metric primary,
+given that it is the only one of the two whose surviving content is
+noncommutative.

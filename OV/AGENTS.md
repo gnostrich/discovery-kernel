@@ -90,3 +90,29 @@ failing CI.
   `ov_cnt_recovers_scalar`, `ov_dist_not_element_valued`), all TARGET
   sorries; file compiles with exactly 5 sorry warnings; `lake build OV`
   green. Challenge.lean still untouched; merge still held for the operator.
+* 2026-07-27 — STEERING-02a: directory renamed `R3_OV/` → `OV/` (imports now
+  `OV.*`). Read `OV/SWEEP.md` S3 (not redone): Łojasiewicz with explicit
+  exponents for σ_min of real polynomial matrices is PUBLISHED
+  (arXiv 1604.02805) — no novelty claimed there; unoccupied = noncommutative
+  setting + per-direction exponent tuple.
+* 2026-07-27 — `OV/Symbolic.lean` written and FULLY PROVED (no sorry):
+  `ovFamilyImage`, `ovVanishingOrder` (trailing degree of the direction
+  datum, ℕ∞-valued, per direction), `familyFibreZero`, `IsDegenerateAtZero`
+  (Σ as discriminant), `ovDatumCoeff`, `ovLeadingCertificate`,
+  `ExponentTupleConstant`. Small refactor of `Cond.lean`: `ovInner`/
+  `ovRayleigh`/`IsIllPosed` no longer require `[PartialOrder B]` (needed for
+  polynomial coefficients); order-dependent defs moved into an inner
+  `Ordered` section. Cond.lean still green, zero sorries.
+* 2026-07-27 — SYMBOLIC COLLAPSE TEST RUN: **NO COLLAPSE**, proved twice.
+  `exponentTuple_not_constant` (B = ℝ×ℝ, family t ↦ (t,t²): orders 1 and 2)
+  and `exponentTuple_not_constant_noncomm` (B = M₂(ℝ), t ↦ e₁t + e₂t²:
+  orders 1 and 2). The tuple is non-constant, so the form does not degenerate
+  to the published single Łojasiewicz exponent — and unlike the metric form
+  (whose abelian case fell into published componentwise conditioning) the
+  survival witness exists in the noncommutative case. Boundary held: no
+  family invented; symbolic proof search over a proof library stays CLOSED.
+* 2026-07-27 — `ov_lojasiewicz_order` added to `CHALLENGE-R3.proposed.lean`
+  as the FALLBACK headline, with explicit PRIMARY (metric) / FALLBACK
+  (symbolic) marking in the section headers; 6 statements, 6 sorry warnings,
+  no errors; `lake build OV` green. Sorry ledger in TIER-STATUS.md updated
+  (all labelled TARGET / DECLARED-OPEN).

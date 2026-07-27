@@ -20,6 +20,7 @@ Both statements end in `sorry` BY DESIGN: R3 is a statements-only tier.
 -/
 import OV.Vocab
 import OV.Cond
+import OV.Symbolic
 
 namespace DiscoveryKernels.Challenge.ProposedR3
 
@@ -74,7 +75,14 @@ theorem ov_completeness
     (halign : R3.HasOVAlignment E x n) :
     R3.HasPolyCause x n := sorry
 
-/-! ## STEERING-02: the operator lift of the conditioning tier
+/-! ## STEERING-02: the operator lift of the conditioning tier — PRIMARY FORM
+
+The tier states TWO forms of the operator lift, and this section is the
+**PRIMARY (metric) form**: a distance to the ill-posed set, valued in `B`.
+The **FALLBACK (symbolic, order-of-vanishing) form** is the final section of
+this file (`ov_lojasiewicz_order`), stated per STEERING-02a. They are
+independent: the metric form needs a distance, the symbolic form needs a
+parametrised family and no distance at all.
 
 The three statements below are the OPERATOR LIFT of the `Conditioning/`
 headline: a Condition Number Theorem with the distance to the ill-posed set
@@ -141,5 +149,54 @@ theorem ov_dist_not_element_valued :
     ∃ x : Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) ℝ),
       ∀ b : Matrix (Fin 2) (Fin 2) ℝ,
         ¬ R3.IsBValuedDistance (Matrix (Fin 2) (Fin 2) ℝ) x b := sorry
+
+/-! ## STEERING-02a: the symbolic (order-of-vanishing) form — FALLBACK FORM
+
+**Marking, explicitly: the metric form above (`ov_condition_number_theorem`,
+`ov_cnt_recovers_scalar`, `ov_dist_not_element_valued`) is PRIMARY; the
+statement below is the FALLBACK.** The metric form survived its collapse test
+(`R3.bvaluedDistance_not_scalar`), so the fallback is a structurally
+different plan B, not a replacement: it needs no metric, only a discriminant
+(`R3.IsDegenerateAtZero`), a deformation (a polynomial family), and an
+integer order of vanishing recorded PER DIRECTION (`R3.ovVanishingOrder`).
+
+Definitional layer and the run collapse test (proved, no `sorry`, including a
+NONCOMMUTATIVE witness): `OV/Symbolic.lean`. Occupancy: OV/SWEEP.md S3 —
+Łojasiewicz with explicit exponents for `σ_min` of real polynomial matrices
+is PUBLISHED (arXiv 1604.02805) and claimed by nobody here; only the
+noncommutative setting and the per-direction tuple are claimed.
+
+Citations: Łojasiewicz (1959, 1965); Bierstone–Milman; Kurdyka (1998);
+Demmel (1987) and Bürgisser–Cucker (2013) for the metric counterpart.
+
+Sorry status: TARGET. -/
+
+/-- **Operator-valued Łojasiewicz order form — PROPOSED, TARGET (FALLBACK).**
+Let `X : Mₙ(B[t])` be a polynomial family over a star-ordered ring `B` whose
+positive cone is faithful (`hfaith`, automatic in any C*-algebra), degenerate
+at the parameter origin (`hdeg`: the fibre `X(0)` is ill-posed — `Σ` as a
+discriminant, no metric). Fix a direction `ξ ∈ Bⁿ` whose Łojasiewicz order is
+`k` (`hk`). Then the defining data vanish to order exactly `k` in that
+direction:
+
+* every lower-order coefficient of the direction datum vanishes — `k`
+  "derivatives" of the defining function die along the degenerate locus; and
+* the order-`k` Łojasiewicz leading certificate is STRICTLY POSITIVE in `B`
+  — the `B`-valued constant `c` of `|f| ≥ c · dist^α`, recorded per
+  direction rather than aggregated into one real number.
+
+The exponent tuple `ξ ↦ k(ξ)` is provably non-constant, over commutative and
+noncommutative `B` alike (`R3.exponentTuple_not_constant`,
+`R3.exponentTuple_not_constant_noncomm`), so this form does not degenerate to
+the published single-exponent case. -/
+theorem ov_lojasiewicz_order
+    {B : Type} [Ring B] [StarRing B] [PartialOrder B] [StarOrderedRing B]
+    (hfaith : ∀ c : B, star c * c = 0 → c = 0)
+    {n : ℕ} (X : Matrix (Fin n) (Fin n) (Polynomial B))
+    (hdeg : R3.IsDegenerateAtZero B X)
+    (ξ : Fin n → B) (k : ℕ)
+    (hk : R3.ovVanishingOrder B X ξ = (k : ℕ∞)) :
+    (∀ j < k, R3.ovDatumCoeff B X ξ j = 0) ∧
+      0 < R3.ovLeadingCertificate B X ξ k := sorry
 
 end DiscoveryKernels.Challenge.ProposedR3
