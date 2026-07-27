@@ -231,6 +231,24 @@ theorem infima_of_bvaluedDistance_diagonal
     · simpa using hc1
     · simpa using hc2
 
+/-- **Contrapositive of the obstruction (proved): `dist_B` is not
+element-valued.** If some pair of positive elements of `B` has no greatest
+common lower bound in the positive cone — which is the generic situation in a
+noncommutative `B` by Kadison's anti-lattice theorem — then there is a
+`2 × 2` matrix over `B` with NO `B`-valued distance to `Σ` at all. The
+`B`-valued condition number of an operator-valued problem is therefore a
+CERTIFICATE SET (`distB`), not an element of `B`. -/
+theorem bvaluedDistance_fails_of_no_infimum
+    (h : ∃ d₁ d₂ : B,
+      ¬ ∃ b : B, IsGreatest {c : B | 0 ≤ c ∧ c ≤ star d₁ * d₁ ∧ c ≤ star d₂ * d₂} b) :
+    ∃ x : Matrix (Fin 2) (Fin 2) B, ∀ b : B, ¬ IsBValuedDistance B x b := by
+  obtain ⟨d₁, d₂, hno⟩ := h
+  by_contra hcon
+  push_neg at hcon
+  refine hno (infima_of_bvaluedDistance_diagonal (fun d => ?_) d₁ d₂)
+  obtain ⟨b, hb⟩ := hcon (Matrix.diagonal d)
+  exact ⟨b, hb⟩
+
 end Diagonal
 
 /-! ## Collapse test 1: the naive global infimum (definition D1) is dead -/
