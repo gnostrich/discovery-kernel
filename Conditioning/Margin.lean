@@ -117,6 +117,15 @@ theorem not_distGE_of_singular_perturbation {A E : Matrix (Fin n) (Fin n) ℝ} {
     ¬ DistGE A c :=
   fun h => h E b hb hbc hE hsing
 
+/-- **Honesty lemma — a zero certificate is vacuous.** `DistGE A 0` holds for
+*every* square matrix, including matrices that are themselves singular. So a
+certificate `c = 0` carries no information whatsoever, and presenting it as a
+bound would be a fake theorem. This tier states the degeneracy rather than
+hiding it; `Sharpness.lean` exhibits an input where the Gershgorin engine's
+output is exactly `0`. -/
+theorem distGE_zero_vacuous (A : Matrix (Fin n) (Fin n) ℝ) : DistGE A 0 :=
+  fun _ _ hb hbc _ => absurd hbc (not_lt.mpr hb)
+
 /-! ### What the margin buys: certified error amplification -/
 
 /-- **The condition-number bound.** A floor `c` on `σ_min(A)` caps the

@@ -152,6 +152,163 @@ products with amalgamation — out of minimal scope, flagged below.
 | 7 | scalar (ℂ) alignment coefficients, not `B`-valued | `HasOVAlignment` | the full amalgamated alignment notion is stronger |
 | 8 | no exponential-polynomial (multiplicity) layer in atomicity | `IsFinitelyAtomicOVStar` | intentionally excluded — positivity is exactly the hypothesis that kills Jordan blocks; if review weakens positivity, multiplicities must return |
 
+## 3b. STEERING-02 — the operator lift of the conditioning tier, and the
+## COLLAPSE VERDICT
+
+Deliverables of this round: `R3_OV/Cond.lean` (definitions + all collapse
+tests, **proved, zero `sorry`**) and three proposed headlines in
+`CHALLENGE-R3.proposed.lean` (`ov_condition_number_theorem`,
+`ov_cnt_recovers_scalar`, `ov_dist_not_element_valued`).
+
+### 3b.1 The definition of `dist_B(x, Σ)`
+
+Setting (finite-dimensional, exact, no analysis): `B` a star-ordered ring,
+`A = Mₙ(B)`, ill-posed set `Σ = {y : ¬ IsUnit y}` (`R3.IsIllPosed`), and the
+Hilbert-C*-module forms on `Bⁿ` written algebraically:
+`⟨ξ, η⟩ = ∑ᵢ ξᵢ* ηᵢ` (`R3.ovInner`) and `⟨ξ, b ξ⟩ = ∑ᵢ ξᵢ* b ξᵢ`
+(`R3.ovRayleigh`). Then
+
+* `R3.IsMargin x b` := `0 ≤ b ∧ ∀ ξ, ⟨ξ, b ξ⟩ ≤ ⟨xξ, xξ⟩` — "`b` is a
+  certified `B`-valued margin", the operator-valued `σ_min(x)² ≥ b`;
+* **`R3.distB x := {b | IsMargin x b}` is `dist_B(x, Σ)`** — the `B`-valued
+  distance object, a certificate SET, downward closed in the positive cone;
+* `R3.IsBValuedDistance x b := IsGreatest (distB x) b` — "`b` IS the
+  `B`-valued distance", when a greatest margin exists;
+* `R3.IsDistanceCertificate x b` — the geometric side: every `y ∈ Σ` is at
+  least `b` away from `x`, measured on `ker y`.
+
+Citation for the shape: Demmel 1987 (`κ = ‖x‖/dist(x,Σ)`);
+Bürgisser–Cucker 2013; Eckart–Young 1936 for the rank-one construction;
+Paschke/Lance for the Hilbert-module inner product; Kadison 1951 for the
+anti-lattice obstruction below; Watatani 1990 as the nearest algebra-valued
+neighbour (SWEEP S2).
+
+That `dist_B` is a SET and not an element of `B` is **forced**, not a
+stylistic dodge — see 3b.3.
+
+### 3b.2 Collapse test 1 (naive definition D1): PROVEN COLLAPSE — D1 IS DEAD
+
+The first definition anyone writes is a global infimum over `Σ` of the
+conditioned squared perturbation,
+`dist_B(x,Σ)² "=" inf { E_B(δ*δ) : x - δ ∈ Σ }` (`R3.IsGlobalInfMargin`).
+
+`R3.globalInf_collapses` **proves it is identically `0`**, in the most
+favourable possible instance: `B = ℝ × ℝ` (commutative — so infima are not
+obstructed), `A = B`, `E = id` (the conditional expectation loses NO
+information), and `x = (1,2)` invertible with scalar condition number 2. The
+two ill-posed points `(0,2)` and `(1,0)` give `E(δ*δ) = (1,0)` and `(0,4)`,
+whose only common positive lower bound is `0`.
+
+Reading: `Σ` is cheap in *every* direction of `B`, so any global infimum is
+zero. A `B`-valued distance must be **compressed** to the corner of `B` where
+the ill-posed direction lives — which is exactly why the surviving
+formulation quantifies over kernels of individual `y ∈ Σ`. This is a
+first-class negative and it is reported as one.
+
+### 3b.3 The structural theorem: `dist_B` CANNOT be an element of `B`
+
+`R3.isMargin_diagonal_iff` (proved) computes the whole margin set of a
+diagonal matrix:
+
+> `IsMargin (diagonal d) b ↔ 0 ≤ b ∧ ∀ i, b ≤ (dᵢ)* dᵢ`
+
+i.e. the operator-valued `σ_min(diag d)² = minᵢ |dᵢ|²`, with `min` replaced by
+"common lower bound". Hence (`R3.infima_of_bvaluedDistance_diagonal`, proved):
+
+> if every `2 × 2` diagonal matrix over `B` has a `B`-VALUED distance, then
+> every pair of positive elements `d₁*d₁, d₂*d₂` has a greatest common lower
+> bound in `B₊`,
+
+and contrapositively (`R3.bvaluedDistance_fails_of_no_infimum`, proved): if
+`B₊` is not an inf-semilattice then some `x ∈ M₂(B)` has **no** `B`-valued
+distance at all.
+
+By **Kadison's anti-lattice theorem** (Proc. AMS 2 (1951) 505–510) the
+self-adjoint part of a factor is an anti-lattice, and the same failure occurs
+in the positive cone. Hand-verified witness in `B = M₂(ℝ)` (rational
+arithmetic, exact):
+
+* `a₁ = diag(2,1)`, `a₂ = [[3/2,1/2],[1/2,3/2]]` (both positive, incomparable);
+* `1` is a common lower bound: `a₁ - 1 = diag(1,0) ⪰ 0`,
+  `a₂ - 1 = ½[[1,1],[1,1]] ⪰ 0`;
+* `c = diag(21/20, 9/10)` is another: `a₁ - c = diag(19/20, 1/10) ⪰ 0`, and
+  `a₂ - c = [[9/20,1/2],[1/2,3/5]]` has trace `> 0` and determinant
+  `27/100 - 25/100 = 1/50 > 0`, hence `⪰ 0`;
+* `1` and `c` are incomparable (`1 - c = diag(-1/20, 1/10)`);
+* no greatest common lower bound exists: a greatest `m` would satisfy
+  `m ⪰ 1` and `m ⪯ a₁`, forcing `m₂₂ = 1`, hence (zero diagonal entry of the
+  positive `a₁ - m`) `m₁₂ = 0`; then `m ⪯ a₂` forces
+  `(3/2 - m₁₁)(1/2) ≥ 1/4`, i.e. `m₁₁ ≤ 1`, contradicting `m ⪰ c`
+  (`m₁₁ ≥ 21/20`).
+
+The general reduction is machine-checked; this instance is stated as the
+TARGET `ov_dist_not_element_valued` and is currently hand-verified only —
+flagged as such, not claimed as proved.
+
+**Consequence, stated plainly: the operator-valued condition number is not a
+number in `B`. It is a set of certificates.** Every downstream statement must
+be certificate-shaped (`IsMargin` / `IsDistanceCertificate`), and the phrase
+"the condition number is an element of `B`" — the framing this tier started
+from — is FALSE for the noncommutative `B` the tier exists to serve.
+
+### 3b.4 Collapse test 2 (the surviving object): verdict
+
+Named failure mode: *if `dist_B` collapses to `λ_min` or to a norm, the
+definition is a renaming and the tier is dead.*
+
+* **Not `λ_min`, not a norm, not any scalar invariant** —
+  `R3.bvaluedDistance_not_scalar` (proved): `witnessX = (1,2)` and
+  `witnessX' = (2,1)` over `B = ℝ × ℝ` have identical scalar condition data
+  (`‖x‖ = 2`, `σ_min = 1`, `κ = 2`) but `B`-valued distances `(1,4)` and
+  `(4,1)`; the best scalar margin for either is `t ≤ 1 = λ_min`, strictly
+  below the `B`-valued answer in one fibre. So the object strictly refines
+  `λ_min` and is not a function of any scalar invariant. **Test 2 passed.**
+* **But the SWEEP-S2 collapse condition FIRES in the abelian case.** For
+  abelian `B` (equivalently: `E_B` onto a masa, `B ≅ C(X)`), `isMargin_diagonal_iff`
+  says the margin set is the fibrewise `{b(ω) ≤ σ_min(x(ω))²}` — i.e.
+  `dist_B` is exactly a **componentwise condition number**, and the
+  componentwise/structured literature (Skeel; Rohn; Higham; the corpus
+  catalogued in `Conditioning/SWEEP.md` S2) is mature and occupied. In the
+  abelian case this tier has **no novelty**, and says so.
+* Combined with 3b.3 this is a **dichotomy**:
+  - `B` abelian ⇒ `B₊` is a lattice ⇒ `dist_B` exists as an element and IS
+    the already-published componentwise condition number (collapse into
+    known art);
+  - `B` noncommutative (factor) ⇒ `dist_B` is **not** element-valued at all;
+    what survives is the certificate set, which no existing literature
+    formulates.
+
+**Overall verdict: the tier is NOT dead, but its claim is now much narrower
+and much sharper than "the condition number is an element of `B`".** The
+surviving, defensible claim is: *the operator-valued conditioning object is a
+certificate set; it is element-valued exactly in the abelian case, where it
+reduces to known componentwise conditioning; the noncommutative content is
+the anti-lattice obstruction itself.* An operator who wants a `B`-valued
+NUMBER should read 3b.3 as a refutation and retire that framing.
+
+### 3b.5 What is genuinely new vs. what is bookkeeping (honest split)
+
+* Genuinely new: the certificate-set formulation; the diagonal reduction
+  identifying the margin set with common lower bounds; the anti-lattice
+  obstruction as a theorem about conditioning; the proved death of the naive
+  global-infimum definition.
+* Bookkeeping (the scalar argument verbatim): `margin_imp_distanceCertificate`
+  and `margin_imp_inverse_bound` — both proved, both easy. The `⇐` half of
+  `ov_condition_number_theorem` is the Eckart–Young rank-one construction and
+  is expected to be equally routine. **The mathematical weight of the
+  `B`-valued CNT is in the definition, not in the argument** — which is
+  precisely why the collapse tests, not the proofs, decide this tier.
+
+### 3b.6 Simplification flags for the conditioning layer
+
+| # | Simplification | Where |
+|---|---|---|
+| C1 | `B` an abstract star-ordered ring; no norm, no completeness, no C*-identity | all of `Cond.lean` |
+| C2 | `Σ` = non-units of `Mₙ(B)`; no rank-`k` stratification of the ill-posed set | `IsIllPosed` |
+| C3 | margins over all `ξ`, unit vectors (`⟨ξ,ξ⟩ = 1`) only in the headline; kernel projections (`⟨ξ,ξ⟩ = p`) not modelled | `IsMargin`, `ov_condition_number_theorem` |
+| C4 | no `E_B` appears: with `A = Mₙ(B)` the conditioning is carried by the module structure, so the promised "distance measured in `E_B`" is realized as the `B`-valued inner product, not as a Tomiyama projection | `ovInner` |
+| C5 | κ itself is never formed (it would be `‖x‖·b⁻¹`-shaped and needs `b` invertible); only margins and certificates | `margin_imp_inverse_bound` |
+
 ## 4. Merge mechanics (for the orchestrator, post-approval)
 
 1. Move/keep `R3_OV/Vocab.lean` definitions in the R3 definitional layer

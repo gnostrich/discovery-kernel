@@ -61,3 +61,32 @@ failing CI.
   module `R3_OV.«CHALLENGE-R3.proposed»` under the glob). Proposals posted
   under PENDING HUMAN REVIEW in `TIER-STATUS.md`; merge held for operator.
   Aristotle not used (statements-only tier; nothing to prove).
+* 2026-07-27 — STEERING-02 received: tier REFRAMED as the operator lift of
+  the new `Conditioning/` tier (B-valued Condition Number Theorem). Sorries
+  are now TARGET vs DECLARED-OPEN, labelled in TIER-STATUS.md. Read
+  `Conditioning/SWEEP.md` S2 (not redone).
+* 2026-07-27 — `R3_OV/Cond.lean` written and FULLY PROVED (no sorry):
+  `ovInner`/`ovRayleigh`/`IsMargin`/`distB`/`IsBValuedDistance`/
+  `IsDistanceCertificate`/`IsGlobalInfMargin`; `isMargin_diagonal_iff`;
+  `infima_of_bvaluedDistance_diagonal`; `bvaluedDistance_fails_of_no_infimum`;
+  `margin_imp_distanceCertificate`; `margin_imp_inverse_bound`.
+* 2026-07-27 — COLLAPSE TESTS RUN. (a) Naive `dist_B` = global inf over Σ of
+  `E(δ*δ)` PROVED ≡ 0 (`globalInf_collapses`), even with E = id, commutative
+  B, well-conditioned x ⇒ definition D1 DEAD; the bound must be compressed to
+  ker y. (b) Surviving object PROVED not λ_min / not a norm / not any scalar
+  invariant (`bvaluedDistance_not_scalar`: (1,2) vs (2,1) over ℝ×ℝ share all
+  scalar condition data, differ in dist_B). (c) NEW DECISIVE NEGATIVE: dist_B
+  is NOT an element of B — diagonal reduction + Kadison anti-lattice (1951)
+  ⇒ over a factor no greatest margin exists; dist_B is a CERTIFICATE SET.
+  Hand-verified M₂(ℝ) witness (a₁ = diag(2,1), a₂ = [[3/2,1/2],[1/2,3/2]],
+  incomparable lower bounds 1 and diag(21/20,9/10)) recorded in the .md,
+  stated as TARGET `ov_dist_not_element_valued`. (d) SWEEP-S2 abelian
+  collapse FIRES: for abelian B, dist_B = componentwise condition number
+  (Skeel/Rohn/Higham) — no novelty in that case. Net verdict: tier survives
+  narrowly with a sharper, certificate-shaped claim; element-valued framing
+  refuted.
+* 2026-07-27 — Three conditioning headlines added to
+  `CHALLENGE-R3.proposed.lean` (`ov_condition_number_theorem`,
+  `ov_cnt_recovers_scalar`, `ov_dist_not_element_valued`), all TARGET
+  sorries; file compiles with exactly 5 sorry warnings; `lake build R3_OV`
+  green. Challenge.lean still untouched; merge still held for the operator.

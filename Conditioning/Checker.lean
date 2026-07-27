@@ -48,6 +48,13 @@ def gershRadiusQ (M : Matrix (Fin n) (Fin n) ℚ) (i : Fin n) : ℚ :=
 /-- The Gram matrix `AᵀA`, over `ℚ`, computed exactly. -/
 def gramQ (A : Matrix (Fin n) (Fin n) ℚ) : Matrix (Fin n) (Fin n) ℚ := Aᵀ * A
 
+/-- `erase`-free form of the Gershgorin radius, convenient for evaluating
+concrete inputs by `simp`/`norm_num` (rather than by kernel reduction of `ℚ`,
+which does not reduce). -/
+theorem gershRadiusQ_eq (M : Matrix (Fin n) (Fin n) ℚ) (i : Fin n) :
+    gershRadiusQ M i = (∑ j, |M i j|) - |M i i| :=
+  Finset.sum_erase_eq_sub (Finset.mem_univ i)
+
 /-! ### Cast lemmas -/
 
 theorem toReal_gramQ (A : Matrix (Fin n) (Fin n) ℚ) :
