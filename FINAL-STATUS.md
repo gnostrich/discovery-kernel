@@ -75,6 +75,38 @@ condition number** — occupied literature (sweep S2), no novelty. Noncommutativ
 `B` is not element-valued at all; the certificate-set formulation plus the
 anti-lattice obstruction is what no literature was found to have.
 
+#### Symbolic fallback (STEERING 02a) — collapse test SURVIVED
+
+`OV/Symbolic.lean` is proven and sorry-free. It carries no metric: `Σ` is a
+**discriminant** (the fibre at `t = 0` is non-invertible, taken
+coefficientwise so nothing commutative is assumed), perturbation is
+**deformation** in a polynomial family over `B[t]`, and distance is **order of
+vanishing** — `ovVanishingOrder`, the trailing degree of the direction datum,
+an integer recorded **per direction and never aggregated**.
+
+The collapse test for this form is whether the exponent tuple is constant
+across directions. Sweep S3 (`OV/SWEEP.md`) showed that test is *identical* to
+the occupancy test, since a constant tuple degenerates to the single published
+Łojasiewicz exponent. **The tuple is non-constant, proved twice:**
+
+* `exponentTuple_not_constant` — over `B = ℝ × ℝ`, the family `t ↦ (t, t²)`
+  has order `1` in direction `(1,0)` and order `2` in direction `(0,1)`, and
+  genuinely deforms through the discriminant (`symWitness_degenerate`).
+* `exponentTuple_not_constant_noncomm` — over `B = M₂(ℝ)`, the family
+  `t ↦ e₁t + e₂t²` has orders `1` and `2` in directions `e₁`, `e₂`.
+
+Note the contrast with the metric form: there the surviving content was
+confined to noncommutative `B` while the abelian case fell into published
+componentwise conditioning. Here the survival witness exists **in** the
+noncommutative setting — exactly the gap S3 identified. On that one axis the
+fallback is better positioned than the primary form.
+
+**Boundary held**: no family was invented. A single `x ∈ Mₙ(B)` has no family,
+no discriminant and no order of vanishing, so the symbolic form simply does not
+apply to it — which is why both forms are stated side by side rather than one
+derived from the other. Symbolic proof search over a proof library is closed
+and recorded as such.
+
 ## Axiom report
 
 Every one of the 9 proven headline solutions, and every supporting lemma
