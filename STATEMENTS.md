@@ -88,6 +88,40 @@ theorem ov_completeness : True := sorry
 **PLACEHOLDER**, replacement drafted in `R3_OV/CHALLENGE-R3.proposed.lean`
 under the same gate.
 
+#### Collapse test: result of the operator lift (PROVED, not proposed)
+
+The OV tier was opened on the thesis that *the condition number of an
+operator-valued problem is an element of `B`*. That thesis was tested
+deliberately, as required, and **the element-valued form is refuted**. The
+following are proved in `R3_OV/Cond.lean` with zero sorries and axioms
+`[propext, Classical.choice, Quot.sound]`:
+
+* `globalInf_collapses` — the naive `dist_B`, defined as a global infimum over
+  `Σ`, is identically **zero**, exhibited in the most favourable instance
+  available: `B = ℝ × ℝ` (commutative, a lattice), `E = id` (no information
+  lost), `x = (1,2)` invertible with `κ = 2`. `Σ` is cheap in every direction
+  of `B`, so any global infimum is useless; the bound must be compressed to
+  `ker y`.
+* `bvaluedDistance_not_scalar` — the surviving object does **not** collapse to
+  `λ_min` or to a norm: `(1,2)` and `(2,1)` over `ℝ × ℝ` share every scalar
+  condition invariant (`‖x‖ = 2`, `σ_min = 1`, `κ = 2`) yet have distinct
+  `B`-valued distances `(1,4)` and `(4,1)`, both strictly above the best
+  scalar margin.
+* `isMargin_diagonal_iff` and `bvaluedDistance_fails_of_no_infimum` —
+  `dist_B` is element-valued for all `2×2` inputs **iff** the positive cone of
+  `B` is an inf-semilattice. By Kadison's anti-lattice theorem that fails over
+  **every factor**. So `dist_B` is a *certificate set*, not an element of `B`,
+  precisely for the noncommutative algebras this tier exists to serve.
+
+Consequently **we do not claim that the operator-valued condition number is an
+element of `B`**; we claim the opposite, and it is proved. The honest residue
+is a dichotomy: for abelian `B` the margin set is fibrewise a *componentwise*
+condition number, which is occupied literature (Skeel/Rohn/Higham — see
+`Conditioning/SWEEP.md` S2), so there is no novelty there; for noncommutative
+`B` the object is not element-valued at all, and it is the certificate-set
+formulation together with the anti-lattice obstruction that no literature was
+found to have.
+
 ### Conditioning — the headline tier
 
 Statements are in preparation; they land in `Challenge.lean` (first section,
