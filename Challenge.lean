@@ -40,12 +40,27 @@ theorem pslq_partial_correct
     (h : R1.pslq x fuel = some m) :
     R1.IsIntRelation x m := sorry
 
-/-- **PSLQ termination / lower bound** (FREEZE-0 placeholder — will be refined
-against `R1.pslq` once it lands; see STATEMENTS.md changelog). Target
-(Borwein–Lisoněk form): while no relation has been reported, every integer
-relation of `x` has norm exceeding an explicit bound computed from the
-algorithm's (rational, CSV/HJLS-normalized) Gram–Schmidt data. -/
-theorem pslq_lower_bound : True := sorry
+/-- **PSLQ termination / lower bound (Borwein–Lisoněk form).** While the
+exact-arithmetic core has reported no relation within `fuel` rounds
+(`R1.pslq x fuel = none`), every integer relation `m` of the exact rational
+input `x` is large: its squared euclidean norm is at least the explicit
+rational number `gsoNormSq x k` read off the state's own rational
+(CSV/HJLS-normalized) Gram–Schmidt data after `fuel` rounds, where `k` is the
+last index at which `m` has a nonzero coordinate in the algorithm's current
+basis (`coords m = Binv · m`, an integer vector by unimodularity).
+
+The index `k` is stated rather than hidden behind a `min` because it must be:
+the `n` projections of the basis columns onto `x^⊥` span an
+`(n-1)`-dimensional space, so exactly one Gram–Schmidt direction degenerates
+and a `min` over all `j` would be the trivial bound `0`. Pinning `k` is what
+makes the bound a real one. Refined from the FREEZE-0 `True` placeholder on
+2026-07-27; see STATEMENTS.md changelog. -/
+theorem pslq_lower_bound
+    {n : ℕ} (x : Fin n → ℚ) (fuel : ℕ) (hnone : R1.pslq x fuel = none)
+    (m : Fin n → ℤ) (hm : R1.IsIntRelation x m) (k : Fin n)
+    (hk : (R1.pslqState x fuel).coords m k ≠ 0)
+    (hlast : ∀ j, k < j → (R1.pslqState x fuel).coords m j = 0) :
+    (R1.pslqState x fuel).gsoNormSq x k ≤ ∑ i, ((m i : ℚ)) ^ 2 := sorry
 
 /-- **THE TIER'S POINT — empirical-input soundness.** Input known to precision
 `p` (true vector `x : Fin n → ℝ`, computed rational approximation `xq` with

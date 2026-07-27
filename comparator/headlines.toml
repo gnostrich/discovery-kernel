@@ -19,8 +19,8 @@ tier = "R1"
 [[headline]]
 name = "pslq_lower_bound"
 challenge = "DiscoveryKernels.Challenge.pslq_lower_bound"
-solution = ""
-module = ""
+solution = "DiscoveryKernels.R1.pslq_lower_bound"
+module = "R1_PSLQ.Bound"
 proven_required = true
 tier = "R1"
 

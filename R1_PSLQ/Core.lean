@@ -186,6 +186,12 @@ theorem PSLQState.report?_spec {x : Fin n → ℚ} {s : PSLQState n}
         _ = s.y j := (hy j).symm
         _ = 0 := hy0
 
+/-- The relation `m` read in the algorithm's current basis: `z = Binv · m`,
+so that `m = B · z`. An integer vector, by unimodularity; used to state the
+lower bound of `R1_PSLQ.Bound`. -/
+def PSLQState.coords (s : PSLQState n) (m : Fin n → ℤ) : Fin n → ℤ :=
+  s.Binv *ᵥ m
+
 /-! ## Rational Gram–Schmidt data (the HJLS normalization) -/
 
 /-- Column `j` of the current basis, over `ℚ`. -/

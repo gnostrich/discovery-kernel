@@ -20,15 +20,18 @@ Typical agent flow: write a SMALL standalone .lean file (statement + minimal
 defs, `import Mathlib`) into a fresh dir, `submit` it with a prompt like
 "Prove the sorries in Main.lean", continue local work, `wait`/`status` later,
 `fetch` and inspect the returned file, then re-verify locally.
+
+Note: every `aristotlelib.Project` method is a coroutine, so each command
+below is async and driven by `asyncio.run`.
 """
 
 import argparse
+import asyncio
 import os
 import sys
-import time
 
 
-def _client():
+def _project_cls():
     if not os.environ.get("ARISTOTLE_API_KEY"):
         sys.exit("ARISTOTLE_API_KEY not set")
     import aristotlelib  # noqa: F401  (key picked up from env)
@@ -36,16 +39,16 @@ def _client():
     return Project
 
 
-def cmd_submit(args):
-    Project = _client()
-    p = Project.create_from_directory(prompt=args.prompt, project_dir=args.dir)
+async def cmd_submit(args):
+    Project = _project_cls()
+    p = await Project.create_from_directory(prompt=args.prompt, project_dir=args.dir)
     print(p.object_id)
 
 
-def _print_status(p):
+async def _print_status(p):
     print(f"project {p.object_id}: status={p.status.name} updated={p.last_updated}")
     try:
-        tasks, _ = p.get_tasks(limit=5)
+        tasks, _ = await p.get_tasks(limit=5)
         for t in tasks:
             desc = (getattr(t, "description", "") or "").replace("\n", " ")[:120]
             print(f"  task {getattr(t, 'status', '?')}: {desc}")
@@ -53,41 +56,41 @@ def _print_status(p):
         print(f"  (tasks unavailable: {e})")
 
 
-def cmd_status(args):
-    Project = _client()
-    _print_status(Project.from_id(args.id))
+async def cmd_status(args):
+    Project = _project_cls()
+    await _print_status(await Project.from_id(args.id))
 
 
-def cmd_wait(args):
-    Project = _client()
-    deadline = time.time() + args.timeout
+async def cmd_wait(args):
+    Project = _project_cls()
+    loop = asyncio.get_running_loop()
+    deadline = loop.time() + args.timeout
     while True:
-        p = Project.from_id(args.id)
-        _print_status(p)
+        p = await Project.from_id(args.id)
+        await _print_status(p)
         if p.status.name == "IDLE":
             return
-        if time.time() > deadline:
+        if loop.time() > deadline:
             sys.exit(f"timeout after {args.timeout}s (still {p.status.name})")
-        time.sleep(args.poll)
+        await asyncio.sleep(args.poll)
 
 
-def cmd_fetch(args):
-    Project = _client()
-    p = Project.from_id(args.id)
-    out = p.get_files(destination=args.dest)
-    print(out)
+async def cmd_fetch(args):
+    Project = _project_cls()
+    p = await Project.from_id(args.id)
+    print(await p.get_files(destination=args.dest))
 
 
-def cmd_ask(args):
-    Project = _client()
-    p = Project.from_id(args.id)
-    p.ask(args.prompt)
+async def cmd_ask(args):
+    Project = _project_cls()
+    p = await Project.from_id(args.id)
+    await p.ask(args.prompt)
     print("sent")
 
 
-def cmd_list(args):
-    Project = _client()
-    projects, _ = Project.list_projects(limit=args.limit)
+async def cmd_list(args):
+    Project = _project_cls()
+    projects, _ = await Project.list_projects(limit=args.limit)
     for p in projects:
         desc = (p.description or "").replace("\n", " ")[:80]
         print(f"{p.object_id}  {p.status.name:8s}  {p.created_at}  {desc}")
@@ -118,7 +121,7 @@ def main():
     s.set_defaults(fn=cmd_list)
 
     args = ap.parse_args()
-    args.fn(args)
+    asyncio.run(args.fn(args))
 
 
 if __name__ == "__main__":

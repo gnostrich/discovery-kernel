@@ -60,3 +60,36 @@ fill your rows of `comparator/headlines.toml`.
   negative recorded — no PSLQ formalization in any proof assistant (3 web
   searches, terms in DEPS.md). Interim status posted in TIER-STATUS.md.
   Resuming strict order: core + partial correctness next.
+* 2026-07-27 — CORE LANDED. `R1_PSLQ/Core.lean` compiles clean (9 errors
+  fixed after the spend-limit kill: iota-reduce structure projections with
+  `dsimp only` after `refine`; `Matrix.transvection_mul_transvection_same`
+  takes `i j` EXPLICITLY before `h`; `List.find?_some` needs its result bound
+  by `have` to avoid the `p := @decide _` higher-order misunification;
+  `Fin`-valued `decreasing_by` needs `Fin.lt_def.mp`; `filterMap` binder
+  needed an explicit `: Fin n` ascription or `(r : ℕ)` steals the binder
+  type; `IsIntRelation` needed its own `Decidable` instance for the
+  `checkPDq`-shaped Bool checker). PROVEN sorry-free:
+  `pslq_partial_correct`, `ElemOp.apply_inv`, `PSLQState.report?_spec`,
+  `checkRelation_sound`/`_iff`, `pslq_checkRelation`. Axioms = the default
+  three on every one. `PSLQState.coords` was moved into `Core.lean` so
+  `Challenge.lean` needs only `import R1_PSLQ.Core`.
+* 2026-07-27 — BOUND LANDED. `R1_PSLQ/Bound.lean` (new): rational
+  Gram–Schmidt orthogonality proved from scratch (Mathlib `gramSchmidt` needs
+  `RCLike`, unusable over `ℚ`), `relation_eq_sum_smul_proj`
+  (`m = ∑ z_j p_j` with `z = Binv·m`), `dotProduct_gso_eq`
+  (`⟨m, b*_k⟩ = z_k‖b*_k‖²`), discrete Cauchy–Schwarz
+  (`Finset.sum_mul_sq_le_sq_mul_sq`) and `z_k² ≥ 1` ⟹
+  `pslq_lower_bound`. Sorry-free, default axioms. DESIGN NOTE for successors:
+  the index `k` (top of the support of `Binv·m`) MUST appear in the
+  statement — the `n` projected columns span the `(n-1)`-dim `x^⊥`, so
+  exactly one GSO direction degenerates and any `min`-over-all-`j` packaging
+  collapses to the trivial bound `0`. The `min` form survives only as the
+  corollary `gsoNormSq_le_of_relation_of_min`.
+* 2026-07-27 — `lakefile.toml` R1_PSLQ glob `["R1_PSLQ.+"]` RESTORED (the one
+  authorized edit outside the tier dir); `lake build` green from the repo
+  root, 8665 jobs. Deliverables written: `CHALLENGE-R1.proposed.md` (exact
+  `pslq_lower_bound` replacement text, comparator-`isDefEq`-verified against
+  the proof; `pslq_partial_correct` refinement had already been landed by the
+  orchestrator with the identical statement) and `COMPARATOR-ROWS.md`. No
+  Aristotle jobs were submitted this session — every obligation closed
+  locally.

@@ -14,10 +14,7 @@ name = "Challenge"
 
 [[lean_lib]]
 name = "R1_PSLQ"
-# Explicit module list rather than a glob, so that a work-in-progress module
-# cannot break CI before it elaborates. Restore the glob
-# (`globs = ["R1_PSLQ.+"]`) once every module in this directory is green.
-globs = ["R1_PSLQ.Defs", "R1_PSLQ.Empirical", "R1_PSLQ.Core"]
+globs = ["R1_PSLQ.+"]
 
 [[lean_lib]]
 name = "R3_OV"
