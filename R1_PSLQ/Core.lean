@@ -103,7 +103,7 @@ theorem apply_inv (e : ElemOp n) (x : Fin n → ℚ) (s : PSLQState n)
     split
     · exact ⟨hy, hBl, hBr⟩
     · rename_i hkj
-      refine ⟨fun j' => ?_, ?_, ?_⟩
+      refine ⟨fun j' => ?_, ?_, ?_⟩ <;> dsimp only
       · by_cases hj' : j' = j
         · subst hj'
           rw [Function.update_self, hy j', hy k, Finset.mul_sum,
@@ -115,10 +115,10 @@ theorem apply_inv (e : ElemOp n) (x : Fin n → ℚ) (s : PSLQState n)
           simp only [Matrix.mul_transvection_apply_of_ne (hb := hj')]
           exact hy j'
       · rw [mul_assoc, ← mul_assoc (Matrix.transvection k j q),
-          Matrix.transvection_mul_transvection_same hkj, add_neg_cancel,
+          Matrix.transvection_mul_transvection_same k j hkj q (-q), add_neg_cancel,
           Matrix.transvection_zero, one_mul, hBl]
       · rw [mul_assoc, ← mul_assoc s.Binv, hBr, one_mul,
-          Matrix.transvection_mul_transvection_same hkj, neg_add_cancel,
+          Matrix.transvection_mul_transvection_same k j hkj (-q) q, neg_add_cancel,
           Matrix.transvection_zero]
   | swap j k =>
     refine ⟨fun j' => ?_, ?_, ?_⟩
@@ -170,7 +170,9 @@ theorem PSLQState.report?_spec {x : Fin n → ℚ} {s : PSLQState n}
   | some j =>
     rw [hf] at h
     have hm : (fun i => s.B i j) = m := by simpa using h
-    have hy0 : s.y j = 0 := of_decide_eq_true (List.find?_some hf)
+    have hy0 : s.y j = 0 := by
+      have hd := List.find?_some hf
+      simpa using hd
     subst hm
     constructor
     · intro hc
@@ -205,7 +207,9 @@ which is unavailable over `ℚ` (it requires `RCLike`). -/
 def gso (v : Fin n → Fin n → ℚ) (j : Fin n) : Fin n → ℚ :=
   v j - ∑ l : Finset.Iio j, ((v j ⬝ᵥ gso v l) / (gso v l ⬝ᵥ gso v l)) • gso v l
 termination_by j
-decreasing_by exact Finset.mem_Iio.mp l.2
+decreasing_by
+  have hl : (l : Fin n) ∈ Finset.Iio j := l.2
+  exact Fin.lt_def.mp (Finset.mem_Iio.mp hl)
 
 /-- `gso` unfolding with a plain (unattached) sum. -/
 theorem gso_def (v : Fin n → Fin n → ℚ) (j : Fin n) :
@@ -240,8 +244,8 @@ squared diagonal `(γ²)^r · ‖b*_r‖²` with `γ² = 2` (any `γ² > 4/3` is
 valid PSLQ weighting; squares keep everything in `ℚ`). -/
 def swapOp (x : Fin n → ℚ) (hn : 2 ≤ n) (s : PSLQState n) : ElemOp n :=
   let cands : List (Fin n × Fin n) :=
-    (List.finRange n).filterMap fun r =>
-      if h : (r : ℕ) + 1 < n then some (r, ⟨(r : ℕ) + 1, h⟩) else none
+    (List.finRange n).filterMap fun r : Fin n =>
+      if h : (r : ℕ) + 1 < n then some (r, (⟨(r : ℕ) + 1, h⟩ : Fin n)) else none
   match cands.argmax fun p => (2 : ℚ) ^ (p.1 : ℕ) * s.gsoNormSq x p.1 with
   | some p => .swap p.1 p.2
   | none => .addMul 0 ⟨0, by omega⟩ ⟨0, by omega⟩  -- unreachable for n ≥ 2
@@ -310,13 +314,31 @@ theorem pslq_partial_correct (x : Fin n → ℚ) (fuel : ℕ) (m : Fin n → ℤ
 
 /-! ## Executable certificate checker (checkPDq_sound schema, see DEPS.md) -/
 
+/-- `IsIntRelation` over `ℚ` is decidable: both conjuncts are decidable
+equalities in a finite-dimensional rational setting. This is what makes the
+Bool certificate checker below executable. -/
+instance instDecidableIsIntRelation (xq : Fin n → ℚ) (m : Fin n → ℤ) :
+    Decidable (IsIntRelation xq m) :=
+  decidable_of_iff (m ≠ 0 ∧ ∑ i, (m i : ℚ) * xq i = 0) Iff.rfl
+
 /-- Decidable Bool certificate checker for a claimed integer relation. -/
 def checkRelation (xq : Fin n → ℚ) (m : Fin n → ℤ) : Bool :=
-  decide (m ≠ 0 ∧ ∑ i, (m i : ℚ) * xq i = 0)
+  decide (IsIntRelation xq m)
 
 /-- Soundness of the executable checker (the `checkPDq_sound` shape). -/
 theorem checkRelation_sound {xq : Fin n → ℚ} {m : Fin n → ℤ}
     (h : checkRelation xq m = true) : IsIntRelation xq m :=
   of_decide_eq_true h
+
+/-- Completeness of the executable checker: the Bool check is exactly
+`IsIntRelation` (the `checkPDq` schema's two-sided form). -/
+theorem checkRelation_iff {xq : Fin n → ℚ} {m : Fin n → ℤ} :
+    checkRelation xq m = true ↔ IsIntRelation xq m :=
+  decide_eq_true_iff
+
+/-- The detector's output always passes the certificate checker. -/
+theorem pslq_checkRelation (x : Fin n → ℚ) (fuel : ℕ) (m : Fin n → ℤ)
+    (h : pslq x fuel = some m) : checkRelation x m = true :=
+  checkRelation_iff.mpr (pslq_partial_correct x fuel m h)
 
 end DiscoveryKernels.R1
