@@ -1,9 +1,9 @@
-# R3_OV/VOCAB.md — what Mathlib v4.32.0 actually has for the OV tier
+# OV/VOCAB.md — what Mathlib v4.32.0 actually has for the OV tier
 
 Survey date: 2026-07-27. Method: direct grep/inspection of
 `.lake/packages/mathlib/Mathlib` (the pinned Mathlib `v4.32.0`). Verdicts are
 **EXISTS** (usable as-is, module path given), **MUST-DEFINE** (absent; the
-minimal surrogate lives in `R3_OV/Defs.lean` / `R3_OV/Vocab.lean`), or
+minimal surrogate lives in `OV/Defs.lean` / `OV/Vocab.lean`), or
 **OUT-OF-SCOPE** (absent and not worth building for a statements-only tier).
 
 ## 1. Von Neumann algebras — EXISTS (skeleton only)

@@ -28,7 +28,7 @@ Design:
   DEPS.md), `checkRelation` is a decidable Bool certificate checker with a
   soundness theorem `checkRelation_sound`.
 -/
-import R1_PSLQ.Defs
+import PSLQ.Defs
 
 namespace DiscoveryKernels.R1
 
@@ -188,7 +188,7 @@ theorem PSLQState.report?_spec {x : Fin n → ℚ} {s : PSLQState n}
 
 /-- The relation `m` read in the algorithm's current basis: `z = Binv · m`,
 so that `m = B · z`. An integer vector, by unimodularity; used to state the
-lower bound of `R1_PSLQ.Bound`. -/
+lower bound of `PSLQ.Bound`. -/
 def PSLQState.coords (s : PSLQState n) (m : Fin n → ℤ) : Fin n → ℤ :=
   s.Binv *ᵥ m
 

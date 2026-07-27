@@ -13,16 +13,16 @@ mechanism (`isDefEq` of the two constants' types, as in
 
 `Challenge.lean` states these using `R1.pslq`, `R1.pslqState`,
 `R1.PSLQState.coords`, `R1.PSLQState.gsoNormSq` and `R1.IsIntRelation`. All of
-them live in (or are re-exported through) `R1_PSLQ.Core`, so exactly one new
+them live in (or are re-exported through) `PSLQ.Core`, so exactly one new
 import line is required:
 
 ```lean
-import R1_PSLQ.Core        -- transitively imports R1_PSLQ.Defs
+import PSLQ.Core        -- transitively imports PSLQ.Defs
 ```
 
 *Status: already applied by the orchestrator* (Challenge.lean now reads
-`import R1_PSLQ.Defs` / `import R1_PSLQ.Core` / `import R3_OV.Defs`).
-No import of `R1_PSLQ.Bound` is needed by `Challenge.lean` — `Bound.lean`
+`import PSLQ.Defs` / `import PSLQ.Core` / `import OV.Defs`).
+No import of `PSLQ.Bound` is needed by `Challenge.lean` — `Bound.lean`
 supplies only the proof; the comparator imports it for the solution side.
 
 ---
@@ -47,7 +47,7 @@ theorem pslq_partial_correct
     R1.IsIntRelation x m := sorry
 ```
 
-Solution: `DiscoveryKernels.R1.pslq_partial_correct` (`R1_PSLQ/Core.lean`),
+Solution: `DiscoveryKernels.R1.pslq_partial_correct` (`PSLQ/Core.lean`),
 proved, axioms `[propext, Classical.choice, Quot.sound]`.
 
 ---
@@ -86,14 +86,14 @@ theorem pslq_lower_bound
     (R1.pslqState x fuel).gsoNormSq x k ≤ ∑ i, ((m i : ℚ)) ^ 2 := sorry
 ```
 
-Solution: `DiscoveryKernels.R1.pslq_lower_bound` (`R1_PSLQ/Bound.lean`),
+Solution: `DiscoveryKernels.R1.pslq_lower_bound` (`PSLQ/Bound.lean`),
 proved, no `sorry`, axioms `[propext, Classical.choice, Quot.sound]`.
 Comparator `isDefEq` check against this exact text: **OK**.
 
 ### Honest notes on the statement (read before applying)
 
 1. **`hnone` is not used by the proof.** The bound holds at *every* state
-   satisfying the loop invariant; `R1_PSLQ/Bound.lean` also exposes the
+   satisfying the loop invariant; `PSLQ/Bound.lean` also exposes the
    stronger hypothesis-free state-level form
    `R1.PSLQState.gsoNormSq_le_of_relation`. `hnone` is kept in the headline
    because the charter's target sentence is "*while no relation has been
@@ -124,7 +124,7 @@ Comparator `isDefEq` check against this exact text: **OK**.
 
 > **2026-07-27 — R1 `pslq_partial_correct` and `pslq_lower_bound` refined from
 > the FREEZE-0 `True` placeholders.** The exact-arithmetic PSLQ-class core
-> landed (`R1_PSLQ/Core.lean`: `R1.pslq`, a fuel-driven detector over `ℚ` in
+> landed (`PSLQ/Core.lean`: `R1.pslq`, a fuel-driven detector over `ℚ` in
 > the CSV/HJLS normalization — state `(y, B, Binv)` with loop invariant
 > `y = x ⬝ B` and an explicit integer two-sided inverse of `B` as the
 > unimodularity certificate; every mutation goes through certified elementary
@@ -132,7 +132,7 @@ Comparator `isDefEq` check against this exact text: **OK**.
 > strategy). `pslq_partial_correct` now states soundness of the core's report:
 > a reported `m` is an exact integer relation of the exact rational input.
 > `pslq_lower_bound` now states the Borwein–Lisoněk termination bound over the
-> state's *exact rational* Gram–Schmidt data (`R1_PSLQ/Bound.lean`): while the
+> state's *exact rational* Gram–Schmidt data (`PSLQ/Bound.lean`): while the
 > core has reported nothing, every integer relation `m` of `x` satisfies
 > `‖m‖² ≥ gsoNormSq x k`, where `k` is the last index at which `m` has a
 > nonzero coordinate in the algorithm's own basis. The index `k` is part of
@@ -142,7 +142,7 @@ Comparator `isDefEq` check against this exact text: **OK**.
 > bound the trivial `0`. Both statements are strengthenings of `True`; no
 > previously claimed statement was weakened. Both are proved sorry-free with
 > axioms `[propext, Classical.choice, Quot.sound]`. `Challenge.lean` gains
-> `import R1_PSLQ.Core` (definitional layer of the core; the proofs of both
-> headlines live in `R1_PSLQ/Core.lean` and `R1_PSLQ/Bound.lean` and are
+> `import PSLQ.Core` (definitional layer of the core; the proofs of both
+> headlines live in `PSLQ/Core.lean` and `PSLQ/Bound.lean` and are
 > pulled in only by the comparator). No `Float` and no `ℝ` occurs in the R1
 > core, the bound, or either statement.

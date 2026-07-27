@@ -60,7 +60,7 @@ tier = "COND"
 name = "pslq_partial_correct"
 challenge = "DiscoveryKernels.Challenge.pslq_partial_correct"
 solution = "DiscoveryKernels.R1.pslq_partial_correct"
-module = "R1_PSLQ.Core"
+module = "PSLQ.Core"
 proven_required = true
 tier = "R1"
 
@@ -68,7 +68,7 @@ tier = "R1"
 name = "pslq_lower_bound"
 challenge = "DiscoveryKernels.Challenge.pslq_lower_bound"
 solution = "DiscoveryKernels.R1.pslq_lower_bound"
-module = "R1_PSLQ.Bound"
+module = "PSLQ.Bound"
 proven_required = true
 tier = "R1"
 
@@ -76,7 +76,7 @@ tier = "R1"
 name = "pslq_empirical_sound"
 challenge = "DiscoveryKernels.Challenge.pslq_empirical_sound"
 solution = "DiscoveryKernels.R1.pslq_empirical_sound"
-module = "R1_PSLQ.Empirical"
+module = "PSLQ.Empirical"
 proven_required = true
 tier = "R1"
 

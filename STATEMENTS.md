@@ -32,7 +32,7 @@ theorem pslq_partial_correct
     (h : R1.pslq x fuel = some m) :
     R1.IsIntRelation x m := sorry
 ```
-**PROVEN** — `DiscoveryKernels.R1.pslq_partial_correct` (`R1_PSLQ/Core.lean`),
+**PROVEN** — `DiscoveryKernels.R1.pslq_partial_correct` (`PSLQ/Core.lean`),
 axioms `[propext, Classical.choice, Quot.sound]`.
 
 ```lean
@@ -43,7 +43,7 @@ theorem pslq_lower_bound
     (hlast : ∀ j, k < j → (R1.pslqState x fuel).coords m j = 0) :
     (R1.pslqState x fuel).gsoNormSq x k ≤ ∑ i, ((m i : ℚ)) ^ 2 := sorry
 ```
-**PROVEN** — `DiscoveryKernels.R1.pslq_lower_bound` (`R1_PSLQ/Bound.lean`),
+**PROVEN** — `DiscoveryKernels.R1.pslq_lower_bound` (`PSLQ/Bound.lean`),
 axioms `[propext, Classical.choice, Quot.sound]`.
 
 ```lean
@@ -59,7 +59,7 @@ theorem pslq_empirical_sound
         R1.IsIntRelation x m) := sorry
 ```
 **PROVEN** — `DiscoveryKernels.R1.pslq_empirical_sound`
-(`R1_PSLQ/Empirical.lean`), axioms `[propext, Classical.choice, Quot.sound]`.
+(`PSLQ/Empirical.lean`), axioms `[propext, Classical.choice, Quot.sound]`.
 This is the PSLQ instance of the condition number theorem: `p` is the input
 precision, `M` the coefficient bound, `n * M * p` the certified margin, and
 the separation hypothesis is the statement that the input is at distance more
@@ -78,14 +78,14 @@ as stated, not merely imprecise: unconditional `rational ⟺ atomic` fails on
 `M n = cos nθ` over `ℝ` and on the Jordan block `n·λⁿ` over `ℂ`, and the
 span-of-shifts rank definition has a Noetherian gap against realizations. A
 corrected replacement (positivity hypotheses, star-corrected atomicity,
-Fliess stable-submodule rank) compiles in `R3_OV/CHALLENGE-R3.proposed.lean`
+Fliess stable-submodule rank) compiles in `OV/CHALLENGE-R3.proposed.lean`
 and is **approved in direction, awaiting human sign-off on exact statements**
 before entering `Challenge.lean`.
 
 ```lean
 theorem ov_completeness : True := sorry
 ```
-**PLACEHOLDER**, replacement drafted in `R3_OV/CHALLENGE-R3.proposed.lean`
+**PLACEHOLDER**, replacement drafted in `OV/CHALLENGE-R3.proposed.lean`
 under the same gate.
 
 #### Collapse test: result of the operator lift (PROVED, not proposed)
@@ -93,7 +93,7 @@ under the same gate.
 The OV tier was opened on the thesis that *the condition number of an
 operator-valued problem is an element of `B`*. That thesis was tested
 deliberately, as required, and **the element-valued form is refuted**. The
-following are proved in `R3_OV/Cond.lean` with zero sorries and axioms
+following are proved in `OV/Cond.lean` with zero sorries and axioms
 `[propext, Classical.choice, Quot.sound]`:
 
 * `globalInf_collapses` — the naive `dist_B`, defined as a global infimum over
@@ -231,7 +231,7 @@ Per STEERING 02, sorries are classified:
   floating-point claim.
 * **No novelty for LLL formalization.** LLL is formalized in Isabelle/HOL
   (Thiemann et al., 2018–2020) and announced for Lean via the Hex library
-  (FLoC 2026); see `R1_PSLQ/DEPS.md`. This repository depends on neither.
+  (FLoC 2026); see `PSLQ/DEPS.md`. This repository depends on neither.
 * **No claim to have formalized control theory.** arXiv 2607.19727
   (Doll–Shames, 22 July 2026) formalizes Lyapunov stability and the
   small-gain theorem in Lean; pole assignment — on Demmel's list — is not

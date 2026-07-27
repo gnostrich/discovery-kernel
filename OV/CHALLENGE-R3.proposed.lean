@@ -10,16 +10,16 @@ gate, the orchestrator holds the merge until the operator approves. Upon
 approval, the two theorem statements below replace the bodies of
 `DiscoveryKernels.Challenge.ov_license` / `ov_completeness` verbatim (the
 namespace here exists only to avoid clashing with the live registry), and
-the definitions they cite (R3_OV/Vocab.lean) become part of the R3
+the definitions they cite (OV/Vocab.lean) become part of the R3
 definitional layer, with a dated STATEMENTS.md changelog entry.
 
 Justification and the analysis of why FREEZE-0's `ov_license` draft is not
-kept as-is: R3_OV/CHALLENGE-R3.proposed.md.
+kept as-is: OV/CHALLENGE-R3.proposed.md.
 
 Both statements end in `sorry` BY DESIGN: R3 is a statements-only tier.
 -/
-import R3_OV.Vocab
-import R3_OV.Cond
+import OV.Vocab
+import OV.Cond
 
 namespace DiscoveryKernels.Challenge.ProposedR3
 
@@ -81,7 +81,7 @@ headline: a Condition Number Theorem with the distance to the ill-posed set
 `Σ` valued in `B` rather than in `ℝ` (Demmel, Numer. Math. 51 (1987)
 251–289; Bürgisser–Cucker, *Condition*, Springer 2013). The definitional
 layer and the RUN COLLAPSE TESTS (all proved, no `sorry`) are in
-`R3_OV/Cond.lean`; the verdict is in `R3_OV/CHALLENGE-R3.proposed.md`.
+`OV/Cond.lean`; the verdict is in `OV/CHALLENGE-R3.proposed.md`.
 
 Sorry status per the STEERING-02 rule: all three are TARGETS (intended to be
 proven), not declared-open frontier. -/
@@ -128,7 +128,7 @@ TARGET (the tier's decisive negative).** Over `B = M₂(ℝ)` with the Loewner
 order there is a `2 × 2` matrix over `B` admitting NO greatest certified
 margin: `dist_B(·, Σ)` is a certificate SET, never a `B`-valued number.
 
-Witness (hand-verified, arithmetic in R3_OV/CHALLENGE-R3.proposed.md, not yet
+Witness (hand-verified, arithmetic in OV/CHALLENGE-R3.proposed.md, not yet
 machine-checked): `x = diagonal ![d₁, d₂]` with `d₁* d₁ = diag(2,1)` and
 `d₂* d₂ = [[3/2,1/2],[1/2,3/2]]`. By `R3.isMargin_diagonal_iff` the margin
 set is the set of positive common lower bounds of those two, and `1` and

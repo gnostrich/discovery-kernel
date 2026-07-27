@@ -23,8 +23,8 @@ certified-positivity's expand/halt), not designed in advance.
 
 | Agent | Owns | Challenge.lean section |
 |-------|------|------------------------|
-| R1    | `R1_PSLQ/`      | `-- ==== R1 ====` |
-| R3    | `R3_OV/`        | `-- ==== R3 ====` |
+| R1    | `PSLQ/`      | `-- ==== R1 ====` |
+| R3    | `OV/`        | `-- ==== R3 ====` |
 
 An agent edits ONLY its own tier directory, its own Challenge.lean section
 (append-only; statement changes require a dated STATEMENTS.md changelog

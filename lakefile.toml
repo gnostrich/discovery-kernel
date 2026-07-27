@@ -1,5 +1,5 @@
 name = "DiscoveryKernels"
-defaultTargets = ["Challenge", "Conditioning", "R1_PSLQ", "R3_OV"]
+defaultTargets = ["Challenge", "Conditioning", "PSLQ", "OV"]
 
 [leanOptions]
 autoImplicit = false
@@ -21,9 +21,9 @@ globs = ["Conditioning.Defs", "Conditioning.Gershgorin", "Conditioning.Margin",
          "Conditioning.Checker", "Conditioning.Sharpness", "Conditioning.Bridge"]
 
 [[lean_lib]]
-name = "R1_PSLQ"
-globs = ["R1_PSLQ.+"]
+name = "PSLQ"
+globs = ["PSLQ.+"]
 
 [[lean_lib]]
-name = "R3_OV"
-globs = ["R3_OV.+"]
+name = "OV"
+globs = ["OV.+"]

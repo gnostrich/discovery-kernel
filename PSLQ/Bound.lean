@@ -29,7 +29,7 @@ nonzero coordinate in the algorithm's basis) rather than hiding it behind a
 
 Everything here is proved; there are no `sorry`s in this file.
 -/
-import R1_PSLQ.Core
+import PSLQ.Core
 
 namespace DiscoveryKernels.R1
 

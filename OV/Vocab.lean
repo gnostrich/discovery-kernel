@@ -6,10 +6,10 @@ R3 — refined definitional layer for the operator-valued (OV) license and
 OV completeness. STATEMENTS ONLY: nothing here is proved beyond what
 elaboration forces; the headline theorems stay `sorry` by design.
 
-This file EXTENDS `R3_OV/Defs.lean` (FREEZE-0) without changing it: the
+This file EXTENDS `OV/Defs.lean` (FREEZE-0) without changing it: the
 FREEZE-0 definitions keep their meaning so that the current Challenge.lean
 R3 section is untouched; the refined headline statements (see
-`R3_OV/CHALLENGE-R3.proposed.lean`, PENDING HUMAN REVIEW) are stated against
+`OV/CHALLENGE-R3.proposed.lean`, PENDING HUMAN REVIEW) are stated against
 the definitions below.
 
 References:
@@ -27,10 +27,10 @@ References:
 
 Every definition names the informal object and flags its simplifications.
 Human-review flag: R3 statements require operator review before merge; see
-R3_OV/TIER-STATUS.md.
+OV/TIER-STATUS.md.
 -/
 import Mathlib
-import R3_OV.Defs
+import OV.Defs
 
 namespace DiscoveryKernels.R3
 
@@ -101,7 +101,7 @@ positive semidefinite `B`-valued Hankel kernel. This is the definitional
 surrogate for "`M` is the moment sequence of the `E_B`-conditioned spectral
 measure `μ = E_B ∘ E_x` of a self-adjoint `x`" (MSY); no measure, spectral
 theorem, or conditional expectation is constructed (Mathlib has none of the
-three in operator-algebraic form — see R3_OV/VOCAB.md). Simplification flags:
+three in operator-algebraic form — see OV/VOCAB.md). Simplification flags:
 as in `OVHankelPSD`; determinacy/boundedness of the underlying measure is not
 encoded. -/
 def IsOVMomentSequence (M : ℕ → B) : Prop :=

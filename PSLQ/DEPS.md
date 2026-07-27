@@ -47,7 +47,7 @@ The Hex library is real, public, and released:
 
 ## Fallback (adopted)
 
-Self-contained rational linear algebra inside `R1_PSLQ/` over `ℚ`, on plain
+Self-contained rational linear algebra inside `PSLQ/` over `ℚ`, on plain
 Mathlib v4.32.0: functions `Fin n → ℚ`, Mathlib `Matrix`/`Finset.sum`
 primitives, hand-rolled Gram–Schmidt data where needed. No `Float`. No new
 `require` in `lakefile.toml`.

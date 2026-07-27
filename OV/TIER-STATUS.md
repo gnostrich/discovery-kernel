@@ -4,7 +4,7 @@ Reframed by STEERING-02 (2026-07-27): R3 is the OPERATOR LIFT of
 `Conditioning/`. Sorries are now labelled TARGET (intended to be proven) or
 DECLARED-OPEN (frontier, no proof claimed).
 
-## Proven (no `sorry`, in `R3_OV/Cond.lean`)
+## Proven (no `sorry`, in `OV/Cond.lean`)
 
 * `globalInf_collapses` — the naive global-infimum `dist_B` is identically
   `0` (collapse test 1: NEGATIVE, definition D1 dead).
@@ -50,13 +50,13 @@ DECLARED-OPEN (frontier, no proof claimed).
    object is certificate-shaped; element-valued exactly in the abelian
    (already-published) case; the noncommutative content is the obstruction
    itself. Full argument, witnesses and hand-verified arithmetic:
-   `R3_OV/CHALLENGE-R3.proposed.md` §3b.
+   `OV/CHALLENGE-R3.proposed.md` §3b.
 
 ## Delivered files
 
 `VOCAB.md` (Mathlib survey), `Vocab.lean` (OV definitional layer),
 `Cond.lean` (conditioning layer, all proofs complete),
-`CHALLENGE-R3.proposed.{lean,md}`. `lake build R3_OV` and
+`CHALLENGE-R3.proposed.{lean,md}`. `lake build OV` and
 `lake build Challenge` green; `Challenge.lean` untouched.
 
 ## PENDING HUMAN REVIEW
@@ -64,7 +64,7 @@ DECLARED-OPEN (frontier, no proof claimed).
 All five statements below are PROPOSALS (R3 charter hard gate); the
 orchestrator holds the merge until the operator approves. Justification,
 counterexamples and the collapse verdict: `CHALLENGE-R3.proposed.md`;
-definitions: `R3_OV/Vocab.lean`, `R3_OV/Cond.lean` (both extend, and do not
+definitions: `OV/Vocab.lean`, `OV/Cond.lean` (both extend, and do not
 alter, FREEZE-0 `Defs.lean`).
 
 ### Proposed `ov_license` (MSY-shaped; replaces the FREEZE-0 draft, which is FALSE)

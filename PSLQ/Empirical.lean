@@ -15,7 +15,7 @@ of the truth `x` under the separation hypothesis.
 The statement text is copied verbatim from `Challenge.lean` (R1 section) so
 the comparator's definitional-equality check is trivial.
 -/
-import R1_PSLQ.Defs
+import PSLQ.Defs
 
 namespace DiscoveryKernels.R1
 

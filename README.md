@@ -31,7 +31,7 @@ including the "What we do NOT claim" section.
 ```
 Challenge.lean    — the statement registry (all headlines `sorry`; solutions live tier-side)
 STATEMENTS.md     — statements verbatim + non-claims + dated changelog
-R1_PSLQ/  R3_OV/  — tier directories (Defs, proofs, AGENTS.md, TIER-STATUS.md)
+PSLQ/  OV/  — tier directories (Defs, proofs, AGENTS.md, TIER-STATUS.md)
 comparator/       — statement-fidelity (definitional-equality) + axiom-allowlist audit, run in CI
 scripts/          — Aristotle prover helper (API key from env, never committed)
 ```

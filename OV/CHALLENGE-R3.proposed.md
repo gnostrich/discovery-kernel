@@ -2,9 +2,9 @@
 
 Status: **PENDING HUMAN REVIEW** (R3 charter hard gate). The live
 Challenge.lean R3 section is untouched. The proposed statements compile:
-`lake env lean R3_OV/CHALLENGE-R3.proposed.lean` succeeds with exactly the
+`lake env lean OV/CHALLENGE-R3.proposed.lean` succeeds with exactly the
 two `declaration uses 'sorry'` warnings (the correct final state for this
-tier), and `lake build R3_OV` / `lake build Challenge` remain green.
+tier), and `lake build OV` / `lake build Challenge` remain green.
 
 ## 1. Verdict on the FREEZE-0 `ov_license` draft: REPLACE (both halves)
 
@@ -29,7 +29,7 @@ shifts of `M` is a finitely generated module", and atomicity as
   generated only when `B` is left-Noetherian. MSY's `B` (a von Neumann
   algebra) is not Noetherian, so FREEZE-0's definition is not even the right
   notion for the motivating case.
-* Fix adopted: `HasFiniteOVHankelRankStable` (R3_OV/Vocab.lean) — "`M` lies
+* Fix adopted: `HasFiniteOVHankelRankStable` (OV/Vocab.lean) — "`M` lies
   in a finitely generated shift-stable left submodule". This is Fliess's
   stable-submodule characterization of recognizable series (Fliess 1974;
   Berstel–Reutenauer Ch. 2), it coincides with FREEZE-0's notion for
@@ -155,7 +155,7 @@ products with amalgamation — out of minimal scope, flagged below.
 ## 3b. STEERING-02 — the operator lift of the conditioning tier, and the
 ## COLLAPSE VERDICT
 
-Deliverables of this round: `R3_OV/Cond.lean` (definitions + all collapse
+Deliverables of this round: `OV/Cond.lean` (definitions + all collapse
 tests, **proved, zero `sorry`**) and three proposed headlines in
 `CHALLENGE-R3.proposed.lean` (`ov_condition_number_theorem`,
 `ov_cnt_recovers_scalar`, `ov_dist_not_element_valued`).
@@ -311,7 +311,7 @@ NUMBER should read 3b.3 as a refutation and retire that framing.
 
 ## 4. Merge mechanics (for the orchestrator, post-approval)
 
-1. Move/keep `R3_OV/Vocab.lean` definitions in the R3 definitional layer
+1. Move/keep `OV/Vocab.lean` definitions in the R3 definitional layer
    (they extend, and do not alter, FREEZE-0 `Defs.lean`).
 2. Replace the two R3 statements in Challenge.lean by the two theorems in
    `CHALLENGE-R3.proposed.lean` verbatim (drop the `ProposedR3` namespace).
@@ -321,5 +321,5 @@ NUMBER should read 3b.3 as a refutation and retire that framing.
    retracted-as-false; `ov_completeness` — placeholder `True` replaced by
    the alignment ⇒ cause implication.
 4. `CHALLENGE-R3.proposed.lean` builds as module
-   `R3_OV.«CHALLENGE-R3.proposed»` under the existing `R3_OV.+` glob (green,
+   `OV.«CHALLENGE-R3.proposed»` under the existing `OV.+` glob (green,
    two sorry warnings); after merge it can be deleted or kept as record.

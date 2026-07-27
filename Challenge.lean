@@ -7,24 +7,32 @@ Released under the MIT license as described in the file LICENSE.
 This file IS the set of claims of this repository. Prose (README,
 STATEMENTS.md) never claims anything this file does not state.
 
+One theory at three altitudes, in the order the claims lead:
+* `COND` — the scalar conditioning theory: certified lower bounds on
+  `dist(x, Σ)`, the distance to the ill-posed set, with executable checkers
+  proven sound and sharpness witnesses where the bound degenerates.
+* `R1` — one instance: PSLQ integer-relation detection, where `Σ` is the set
+  of vectors admitting a shorter relation.
+* `R3` — the operator lift, `Σ` and the margin taken in an algebra `B`.
+
 Rules of this file:
-* Two append-only tier sections (R1, R3), delimited below. No agent edits
-  another tier's section. (R0 and R2 were descoped 2026-07-27 — the scalar
-  license lives in the sibling repo `gnostrich/realization-lean`, and no
-  abstract detector interface is designed up front; see STATEMENTS.md
+* Three append-only tier sections, delimited below. No agent edits another
+  tier's section. (R0 and R2 were descoped 2026-07-27; see STATEMENTS.md
   changelog.)
 * Every headline here is stated with `:= sorry` — permanently. Solutions live
   in the tier directories and are checked against these statements by
   `comparator/` (definitional-equality check + per-theorem axiom allowlist).
-  R3 headlines are stated frontier: no solution is claimed, by design.
+  A `sorry` here is a registry marker, never an open problem.
+* R3 headlines are under a human-review gate and are stated frontier; see
+  STATEMENTS.md for which sorries are targets and which are declared-open.
 * Statement changes after FREEZE-0 are recorded in STATEMENTS.md with a dated
   note.
 -/
 import Conditioning.Sharpness
 import Conditioning.Bridge
-import R1_PSLQ.Defs
-import R1_PSLQ.Core
-import R3_OV.Defs
+import PSLQ.Defs
+import PSLQ.Core
+import OV.Defs
 
 open scoped BigOperators Matrix
 
@@ -210,7 +218,7 @@ operator-valued moment sequence over a ring `B`: finite OV Hankel rank,
 existence of a finite linear realization (rational `B`-valued resolvent), and
 finite atomicity are equivalent. Cf. Mai–Speicher–Yin. `sorry` BY DESIGN:
 this tier states the frontier; no proof is claimed. FREEZE-0 draft shape —
-requires operator review before any refinement is merged (see R3_OV/AGENTS.md). -/
+requires operator review before any refinement is merged (see OV/AGENTS.md). -/
 theorem ov_license
     {B : Type} [Ring B] (M : ℕ → B) :
     (R3.HasFiniteOVHankelRank B M ↔ R3.HasFiniteRealization B M) ∧

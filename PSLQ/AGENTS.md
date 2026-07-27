@@ -8,7 +8,7 @@ start; append to MEMORY after every significant step. Obey the root
 
 1. **DEPS.md verdict (blocker).** Locate and license-check the Hex library
    (Lean verified LLL/Gram–Schmidt, announced FLoC 2026, availability
-   unverified). Write `R1_PSLQ/DEPS.md`: HEX-USABLE (dependency + pin) or
+   unverified). Write `PSLQ/DEPS.md`: HEX-USABLE (dependency + pin) or
    HEX-UNAVAILABLE (fall back to Mathlib primitives / self-contained rational
    Gram–Schmidt). No proofs before this verdict is committed.
 2. **Exact-arithmetic core over ℚ.** We formalize the PSLQ-class detector in
@@ -50,8 +50,8 @@ fill your rows of `comparator/headlines.toml`.
   Lake graph conflict; also fit is partial (LLL/ℤ vs PSLQ-HJLS/ℚ). Fallback:
   self-contained rational linear algebra on plain Mathlib. Proofs unblocked.
 * 2026-07-27 — EARLY WIN LANDED: `DiscoveryKernels.R1.pslq_empirical_sound`
-  proven in R1_PSLQ/Empirical.lean (statement copied verbatim from
-  Challenge.lean; `lake build R1_PSLQ` green; axioms = [propext,
+  proven in PSLQ/Empirical.lean (statement copied verbatim from
+  Challenge.lean; `lake build PSLQ` green; axioms = [propext,
   Classical.choice, Quot.sound] — exactly the default allowlist). No sorry.
 * 2026-07-27 — STEERING CHANGE received: R2 dropped (no DiscoveryKernel
   instance), R0 moved out. Two new DEPS blockers completed: (a)
@@ -60,7 +60,7 @@ fill your rows of `comparator/headlines.toml`.
   negative recorded — no PSLQ formalization in any proof assistant (3 web
   searches, terms in DEPS.md). Interim status posted in TIER-STATUS.md.
   Resuming strict order: core + partial correctness next.
-* 2026-07-27 — CORE LANDED. `R1_PSLQ/Core.lean` compiles clean (9 errors
+* 2026-07-27 — CORE LANDED. `PSLQ/Core.lean` compiles clean (9 errors
   fixed after the spend-limit kill: iota-reduce structure projections with
   `dsimp only` after `refine`; `Matrix.transvection_mul_transvection_same`
   takes `i j` EXPLICITLY before `h`; `List.find?_some` needs its result bound
@@ -72,8 +72,8 @@ fill your rows of `comparator/headlines.toml`.
   `pslq_partial_correct`, `ElemOp.apply_inv`, `PSLQState.report?_spec`,
   `checkRelation_sound`/`_iff`, `pslq_checkRelation`. Axioms = the default
   three on every one. `PSLQState.coords` was moved into `Core.lean` so
-  `Challenge.lean` needs only `import R1_PSLQ.Core`.
-* 2026-07-27 — BOUND LANDED. `R1_PSLQ/Bound.lean` (new): rational
+  `Challenge.lean` needs only `import PSLQ.Core`.
+* 2026-07-27 — BOUND LANDED. `PSLQ/Bound.lean` (new): rational
   Gram–Schmidt orthogonality proved from scratch (Mathlib `gramSchmidt` needs
   `RCLike`, unusable over `ℚ`), `relation_eq_sum_smul_proj`
   (`m = ∑ z_j p_j` with `z = Binv·m`), `dotProduct_gso_eq`
@@ -85,7 +85,7 @@ fill your rows of `comparator/headlines.toml`.
   exactly one GSO direction degenerates and any `min`-over-all-`j` packaging
   collapses to the trivial bound `0`. The `min` form survives only as the
   corollary `gsoNormSq_le_of_relation_of_min`.
-* 2026-07-27 — `lakefile.toml` R1_PSLQ glob `["R1_PSLQ.+"]` RESTORED (the one
+* 2026-07-27 — `lakefile.toml` PSLQ glob `["PSLQ.+"]` RESTORED (the one
   authorized edit outside the tier dir); `lake build` green from the repo
   root, 8665 jobs. Deliverables written: `CHALLENGE-R1.proposed.md` (exact
   `pslq_lower_bound` replacement text, comparator-`isDefEq`-verified against

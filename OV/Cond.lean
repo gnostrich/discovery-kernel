@@ -27,10 +27,10 @@ References:
 * Componentwise/structured condition numbers (Skeel; Rohn; Higham; the
   structured literature catalogued in Conditioning/SWEEP.md S2) — the honest
   comparison class for the ABELIAN case, where our object collapses into
-  known art. Flagged as a collapse in R3_OV/CHALLENGE-R3.proposed.md.
+  known art. Flagged as a collapse in OV/CHALLENGE-R3.proposed.md.
 
 Everything in this file is PROVED (no `sorry`); the proposed headline
-statements built on it live in R3_OV/CHALLENGE-R3.proposed.lean.
+statements built on it live in OV/CHALLENGE-R3.proposed.lean.
 -/
 import Mathlib
 
@@ -157,7 +157,7 @@ bounded in the `B`-valued Rayleigh form by `b`: `⟨x⁻¹η, b x⁻¹η⟩ ≤ 
 This is the operator-valued form of the licensing half of the Condition
 Number Theorem, `‖x⁻¹‖ ≤ 1/dist(x, Σ)` (Demmel 1987): a certified margin
 bounds the error amplification of the computation. NOTE (reported honestly in
-R3_OV/CHALLENGE-R3.proposed.md): the argument is the scalar one verbatim —
+OV/CHALLENGE-R3.proposed.md): the argument is the scalar one verbatim —
 the mathematical weight of the `B`-valued theory sits in the DEFINITION of
 the margin, not in this inequality. -/
 theorem margin_imp_inverse_bound {n : ℕ} (u : (Matrix (Fin n) (Fin n) B)ˣ) (b : B)
@@ -228,7 +228,7 @@ factor — in particular `Mₚ(ℂ)` for `p ≥ 2` and every `II₁` factor, i.e
 exactly the algebras the MSY/free-probability setting cares about. A
 hand-verified explicit witness in `M₂` (`a₁ = diag(2,1)`,
 `a₂ = [[3/2,1/2],[1/2,3/2]]`, incomparable lower bounds `1` and
-`diag(21/20, 9/10)`) is recorded in R3_OV/CHALLENGE-R3.proposed.md. -/
+`diag(21/20, 9/10)`) is recorded in OV/CHALLENGE-R3.proposed.md. -/
 theorem infima_of_bvaluedDistance_diagonal
     (h : ∀ d : Fin 2 → B, ∃ b, IsBValuedDistance B (Matrix.diagonal d) b)
     (d₁ d₂ : B) :
@@ -345,7 +345,7 @@ mature, occupied literature (Skeel; Rohn; Higham; the structured/componentwise
 corpus of SWEEP S2). So test 2 is passed only in the weak sense; the tier's
 surviving novelty is confined to NONCOMMUTATIVE `B`, where by
 `infima_of_bvaluedDistance_diagonal` the object is not even element-valued.
-See R3_OV/CHALLENGE-R3.proposed.md for the full verdict. -/
+See OV/CHALLENGE-R3.proposed.md for the full verdict. -/
 theorem bvaluedDistance_not_scalar :
     IsBValuedDistance (ℝ × ℝ) witnessX ((1 : ℝ), (4 : ℝ)) ∧
       IsBValuedDistance (ℝ × ℝ) witnessX' ((4 : ℝ), (1 : ℝ)) ∧

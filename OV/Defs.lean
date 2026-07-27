@@ -17,7 +17,7 @@ References:
   "rational B-valued resolvent".
 
 Human-review flag: per the project directive, R3 statements require operator
-review before merge to main; see R3_OV/TIER-STATUS.md.
+review before merge to main; see OV/TIER-STATUS.md.
 -/
 import Mathlib
 

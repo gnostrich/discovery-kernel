@@ -4,20 +4,20 @@ Updated 2026-07-27 (post core + lower bound).
 
 ## Proven (sorry-free, axioms exactly `[propext, Classical.choice, Quot.sound]`)
 
-* `DiscoveryKernels.R1.pslq_empirical_sound` (`R1_PSLQ/Empirical.lean`) —
+* `DiscoveryKernels.R1.pslq_empirical_sound` (`PSLQ/Empirical.lean`) —
   THE TIER'S POINT. Statement verbatim from Challenge.lean; comparator-green.
   Under the repository's new organizing thesis (condition number
   `κ(x) = ‖x‖ / dist(x, Σ)`) this is the PSLQ instance's certified margin:
   input precision `p` + coefficient bound `M` ⟹ the report is exact, not a
   rounding artifact.
-* `DiscoveryKernels.R1.pslq_partial_correct` (`R1_PSLQ/Core.lean`) — the
+* `DiscoveryKernels.R1.pslq_partial_correct` (`PSLQ/Core.lean`) — the
   exact-arithmetic PSLQ-class core `R1.pslq` over `ℚ` (CSV/HJLS
   normalization) reports only genuine integer relations. Challenge.lean's
   refined statement is already landed by the orchestrator and matches.
-* `DiscoveryKernels.R1.pslq_lower_bound` (`R1_PSLQ/Bound.lean`) — the
+* `DiscoveryKernels.R1.pslq_lower_bound` (`PSLQ/Bound.lean`) — the
   Borwein–Lisoněk termination bound over the state's exact rational
   Gram–Schmidt data. Proposed Challenge.lean replacement text is in
-  `R1_PSLQ/CHALLENGE-R1.proposed.md`, comparator `isDefEq`-verified against
+  `PSLQ/CHALLENGE-R1.proposed.md`, comparator `isDefEq`-verified against
   the proof.
 * Supporting, all proved: `ElemOp.apply_inv` (certified elementary column
   operations preserve the loop invariant — partial correctness is therefore
@@ -32,7 +32,7 @@ Updated 2026-07-27 (post core + lower bound).
 
 ## Sorry
 
-* Nothing in `R1_PSLQ/`. `Core.lean` and `Bound.lean` are sorry-free.
+* Nothing in `PSLQ/`. `Core.lean` and `Bound.lean` are sorry-free.
 * `Challenge.lean`'s R1 placeholders are `sorry` **by design** (that file
   states, it never proves).
 
@@ -68,8 +68,8 @@ Updated 2026-07-27 (post core + lower bound).
 
 ## Build state
 
-* `lakefile.toml` R1_PSLQ entry: glob `["R1_PSLQ.+"]` **restored** (every
-  module under `R1_PSLQ/` elaborates). `lake build` from the repo root:
+* `lakefile.toml` PSLQ entry: glob `["PSLQ.+"]` **restored** (every
+  module under `PSLQ/` elaborates). `lake build` from the repo root:
   green, 8665 jobs.
 * No `Float` and no `ℝ` anywhere in `Core.lean` or `Bound.lean`; `ℝ` appears
   only in `Empirical.lean`, where the truth vector lives by design.
@@ -80,9 +80,9 @@ Updated 2026-07-27 (post core + lower bound).
 
 ## Deliverables for the orchestrator
 
-* `R1_PSLQ/CHALLENGE-R1.proposed.md` — exact replacement text for
+* `PSLQ/CHALLENGE-R1.proposed.md` — exact replacement text for
   `pslq_lower_bound` (and the already-landed `pslq_partial_correct`), the
   required Challenge.lean import line, and a dated STATEMENTS.md changelog
   paragraph.
-* `R1_PSLQ/COMPARATOR-ROWS.md` — the three R1 `headlines.toml` rows and the
+* `PSLQ/COMPARATOR-ROWS.md` — the three R1 `headlines.toml` rows and the
   `comparator/AxiomCheck.lean` additions, with the local verification table.

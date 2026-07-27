@@ -12,7 +12,7 @@ final state for this tier's headlines.
 1. **VOCAB.md (hour-one-class blocker for this tier):** survey what Mathlib
    has toward von Neumann algebras / C*-algebras, conditional expectation,
    operator-valued measures, free probability (expect: little). Write
-   `R3_OV/VOCAB.md`: what exists vs. what must be defined. Be honest about
+   `OV/VOCAB.md`: what exists vs. what must be defined. Be honest about
    gaps.
 2. Build the MINIMAL definitional layer to state (not prove): `B`-valued
    Hankel-type rank; rationality of a `B`-valued resolvent; atomic support of
@@ -57,15 +57,15 @@ failing CI.
   first real `ov_completeness` (alignment ⇒ structural cause; genericity =
   faithfulness of `E` + self-adjoint tuple; degree-local cause) stated in
   `CHALLENGE-R3.proposed.lean` — compiles with exactly 2 sorry warnings;
-  `lake build R3_OV` and `lake build Challenge` green (proposal builds as
-  module `R3_OV.«CHALLENGE-R3.proposed»` under the glob). Proposals posted
+  `lake build OV` and `lake build Challenge` green (proposal builds as
+  module `OV.«CHALLENGE-R3.proposed»` under the glob). Proposals posted
   under PENDING HUMAN REVIEW in `TIER-STATUS.md`; merge held for operator.
   Aristotle not used (statements-only tier; nothing to prove).
 * 2026-07-27 — STEERING-02 received: tier REFRAMED as the operator lift of
   the new `Conditioning/` tier (B-valued Condition Number Theorem). Sorries
   are now TARGET vs DECLARED-OPEN, labelled in TIER-STATUS.md. Read
   `Conditioning/SWEEP.md` S2 (not redone).
-* 2026-07-27 — `R3_OV/Cond.lean` written and FULLY PROVED (no sorry):
+* 2026-07-27 — `OV/Cond.lean` written and FULLY PROVED (no sorry):
   `ovInner`/`ovRayleigh`/`IsMargin`/`distB`/`IsBValuedDistance`/
   `IsDistanceCertificate`/`IsGlobalInfMargin`; `isMargin_diagonal_iff`;
   `infima_of_bvaluedDistance_diagonal`; `bvaluedDistance_fails_of_no_infimum`;
@@ -88,5 +88,5 @@ failing CI.
 * 2026-07-27 — Three conditioning headlines added to
   `CHALLENGE-R3.proposed.lean` (`ov_condition_number_theorem`,
   `ov_cnt_recovers_scalar`, `ov_dist_not_element_valued`), all TARGET
-  sorries; file compiles with exactly 5 sorry warnings; `lake build R3_OV`
+  sorries; file compiles with exactly 5 sorry warnings; `lake build OV`
   green. Challenge.lean still untouched; merge still held for the operator.
