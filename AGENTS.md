@@ -6,32 +6,47 @@ MEMORY log) and `TIER-STATUS.md` (current state). Agents read their charter
 and memory at session start and append to MEMORY after every significant
 step, so work survives across sessions.
 
-## Project constellation (revised scope, 2026-07-27)
+## What this repository claims
+
+Conditioning is inverse distance to ill-posedness (Condition Number Theorem —
+Demmel 1987; Bürgisser–Cucker 2013), so `dist(x, Σ)` is a **margin**: a
+certified bound `dist(x, Σ) ≥ c > 0` licenses a finite-precision computation.
+One theory at three altitudes: the scalar theory (`Conditioning/`), one
+instance (`PSLQ/`), the operator lift (`OV/`).
+
+## Project constellation (2026-07-27)
 
 | Repo | Role | Status |
 |------|------|--------|
-| `gnostrich/discovery-kernel` (this) | R1 (PSLQ) + R3 (OV statements) | active |
-| `gnostrich/realization-lean` | scalar license: Kronecker realizability, rank stabilization, Kalman uniqueness, no-go, pole deletion, sym⊕skew decomposition, counterexample locks | active (Agent A) |
-| `gnostrich/certified-positivity` | prior art: `checkPDq_sound` (decidable check proven sound), rational-enclosure / margin-transfer schemas, expand/halt certificates | **FROZEN — read/cite/import only, NEVER edit** |
+| `gnostrich/discovery-kernel` (this) | Conditioning (headline) + PSLQ + OV | active |
+| `gnostrich/certified-positivity` | prior art: `checkPDq_sound` (decidable check proven sound), `gershgorin_margin`, `coverage_band`, sharpness witness `three_grid_last_row_gershgorin_zero` | **FROZEN — read/cite/adapt at schema level, NEVER edit** |
+| `gnostrich/realization-lean` | **not a dependency of this repo**; work there was halted by the 2026-07-27 scope correction | out of scope |
 
-R0 and R2 were descoped from this repo (see STATEMENTS.md changelog). No
-abstract detector interface is designed up front; if ever wanted it gets
-extracted from working instances (realization-lean's rank stabilization,
-certified-positivity's expand/halt), not designed in advance.
+R0 and R2 were descoped (see STATEMENTS.md changelog). No abstract detector
+interface is designed up front; if ever wanted it gets extracted from working
+instances, not designed in advance.
 
 ## Tier ownership (hard rule)
 
 | Agent | Owns | Challenge.lean section |
 |-------|------|------------------------|
-| R1    | `PSLQ/`      | `-- ==== R1 ====` |
-| R3    | `OV/`        | `-- ==== R3 ====` |
+| COND  | `Conditioning/` | `-- ==== COND ====` (leads the file) |
+| R1    | `PSLQ/`         | `-- ==== R1 ====` |
+| R3    | `OV/`           | `-- ==== R3 ====` |
+
+The Conditioning section leads `Challenge.lean` deliberately: which claim
+leads is itself a claim.
 
 An agent edits ONLY its own tier directory, its own Challenge.lean section
 (append-only; statement changes require a dated STATEMENTS.md changelog
 entry first), its own rows of STATEMENTS.md/comparator TOMLs, and its own
-`AGENTS.md`/`TIER-STATUS.md`. Nothing else. Agent A owns the entire
-`realization-lean` working copy (`/workspace/realization-lean`) and nothing
-in this repo.
+`AGENTS.md`/`TIER-STATUS.md`. Nothing else. Tier agents do not run git
+commands; the orchestrator commits.
+
+Note on library globs: `PSLQ` and `OV` use `*.+` globs, so **any** file added
+under those directories must elaborate or CI breaks. `Conditioning` uses an
+explicit module list precisely so its proposal document is never elaborated
+as library code.
 
 ## Standing policies (non-negotiable, from the project directive)
 
