@@ -30,3 +30,7 @@ one such event; more means the signature was wrong — stop and reconsider.
 * 2026-07-27 — Tier initialized at FREEZE-0 with the candidate signature in
   `Defs.lean` (generic / genuine / drop / license, `genuine` as a field
   relating Output to State). FREEZE-1 not yet declared.
+* 2026-07-27 — **FREEZE-1 DECLARED.** The `DiscoveryKernel` signature in
+  `Defs.lean` (fields `generic`, `genuine`, `drop`, `license`) is FROZEN as
+  committed at FREEZE-0 and compiles green. R1/R3 instantiation work is
+  unblocked. Changes only via CHANGE-REQUESTS.md.
