@@ -11,8 +11,8 @@
 [[headline]]
 name = "pslq_partial_correct"
 challenge = "DiscoveryKernels.Challenge.pslq_partial_correct"
-solution = ""
-module = ""
+solution = "DiscoveryKernels.R1.pslq_partial_correct"
+module = "R1_PSLQ.Core"
 proven_required = true
 tier = "R1"
 

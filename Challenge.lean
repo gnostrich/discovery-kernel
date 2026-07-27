@@ -21,18 +21,24 @@ Rules of this file:
   note.
 -/
 import R1_PSLQ.Defs
+import R1_PSLQ.Core
 import R3_OV.Defs
 
 namespace DiscoveryKernels.Challenge
 
 -- ==== R1 ==== PSLQ: exact core, termination, empirical input ==============
 
-/-- **PSLQ partial correctness** (FREEZE-0 placeholder — will be refined to
-speak about the exact-arithmetic PSLQ-class core `R1.pslq` once that
-definition lands; see STATEMENTS.md changelog). Target: if the core, run on
-exact rational input `x`, reports `m`, then `m` is an integer relation of
-`x`. -/
-theorem pslq_partial_correct : True := sorry
+/-- **PSLQ partial correctness.** If the exact-arithmetic PSLQ-class core
+`R1.pslq`, run on exact rational input `x` with any fuel, reports `m`, then
+`m` is an integer relation of `x` (nonzero, with `∑ mᵢ xᵢ = 0`).
+
+Soundness only: this says a report is correct, never that the core reports
+whenever a relation exists. Refined from the FREEZE-0 `True` placeholder on
+2026-07-27, when `R1.pslq` landed; see STATEMENTS.md changelog. -/
+theorem pslq_partial_correct
+    {n : ℕ} (x : Fin n → ℚ) (fuel : ℕ) (m : Fin n → ℤ)
+    (h : R1.pslq x fuel = some m) :
+    R1.IsIntRelation x m := sorry
 
 /-- **PSLQ termination / lower bound** (FREEZE-0 placeholder — will be refined
 against `R1.pslq` once it lands; see STATEMENTS.md changelog). Target
