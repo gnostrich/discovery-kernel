@@ -1,0 +1,346 @@
+# STATEMENTS
+
+This file mirrors `Challenge.lean`, the statement registry of this repository.
+**The Lean statements are the claims.** Prose in this repository never claims
+anything `Challenge.lean` does not state. If a statement must change, it
+changes in `Challenge.lean` and here first, with a dated note in the
+changelog at the bottom.
+
+## The thesis, in one paragraph
+
+A problem maps input data to an answer. Some inputs are **ill-posed**: an
+arbitrarily small perturbation changes the answer discontinuously. Write `Σ`
+for the set of ill-posed inputs. The condition number `κ(x)` measures error
+amplification and is infinite exactly on `Σ`. The **Condition Number
+Theorem** (Demmel 1987, Numer. Math. 51, 251–289; canonical text
+Bürgisser–Cucker, *Condition: The Geometry of Numerical Algorithms*, Springer
+2013) says that for many problems `κ(x) = ‖x‖ / dist(x, Σ)` — conditioning is
+inverse distance to ill-posedness. Therefore `dist(x, Σ)` is a **margin**: a
+certified bound `dist(x, Σ) ≥ c > 0` licenses a finite-precision computation,
+because data accurate to better than `c` yields a provably correct answer.
+This repository certifies such margins at three altitudes: the scalar theory
+(`Conditioning/`), one instance (`PSLQ`, where `Σ` = vectors admitting a
+shorter integer relation), and the operator lift (`OV`).
+
+## Statements (verbatim from Challenge.lean)
+
+### PSLQ — integer relation detection (Σ = vectors admitting a shorter relation)
+
+```lean
+theorem pslq_partial_correct
+    {n : ℕ} (x : Fin n → ℚ) (fuel : ℕ) (m : Fin n → ℤ)
+    (h : R1.pslq x fuel = some m) :
+    R1.IsIntRelation x m := sorry
+```
+**PROVEN** — `DiscoveryKernels.R1.pslq_partial_correct` (`PSLQ/Core.lean`),
+axioms `[propext, Classical.choice, Quot.sound]`.
+
+```lean
+theorem pslq_lower_bound
+    {n : ℕ} (x : Fin n → ℚ) (fuel : ℕ) (hnone : R1.pslq x fuel = none)
+    (m : Fin n → ℤ) (hm : R1.IsIntRelation x m) (k : Fin n)
+    (hk : (R1.pslqState x fuel).coords m k ≠ 0)
+    (hlast : ∀ j, k < j → (R1.pslqState x fuel).coords m j = 0) :
+    (R1.pslqState x fuel).gsoNormSq x k ≤ ∑ i, ((m i : ℚ)) ^ 2 := sorry
+```
+**PROVEN** — `DiscoveryKernels.R1.pslq_lower_bound` (`PSLQ/Bound.lean`),
+axioms `[propext, Classical.choice, Quot.sound]`.
+
+```lean
+theorem pslq_empirical_sound
+    {n : ℕ} (x : Fin n → ℝ) (xq : Fin n → ℚ) (p : ℝ) (M : ℤ)
+    (m : Fin n → ℤ)
+    (happ : ∀ i, |x i - (xq i : ℝ)| ≤ p)
+    (hM : ∀ i, |m i| ≤ M)
+    (hrel : R1.IsIntRelation xq m) :
+    |∑ i, (m i : ℝ) * x i| ≤ (n : ℝ) * (M : ℝ) * p ∧
+      ((∀ k : Fin n → ℤ, k ≠ 0 → (∀ i, |k i| ≤ M) →
+          ∑ i, (k i : ℝ) * x i = 0 ∨ (n : ℝ) * (M : ℝ) * p < |∑ i, (k i : ℝ) * x i|) →
+        R1.IsIntRelation x m) := sorry
+```
+**PROVEN** — `DiscoveryKernels.R1.pslq_empirical_sound`
+(`PSLQ/Empirical.lean`), axioms `[propext, Classical.choice, Quot.sound]`.
+This is the PSLQ instance of the condition number theorem: `p` is the input
+precision, `M` the coefficient bound, `n * M * p` the certified margin, and
+the separation hypothesis is the statement that the input is at distance more
+than that margin from `Σ`.
+
+### OV — operator-valued lift (STATEMENTS ONLY)
+
+Six statements, signed off by the operator on 2026-07-28. The FREEZE-0
+`ov_license` draft was **replaced, not weakened**: it was proved *false* as
+stated (unconditional `rational ⟺ atomic` fails on `M n = cos nθ` over `ℝ` and
+on the Jordan block `n·λⁿ` over `ℂ`), and its rank definition had a Noetherian
+gap against realizations. The refined chain adds positivity hypotheses
+(`IsOVMomentSequence` over a `StarOrderedRing`), star-corrects atomicity, and
+uses the Fliess stable-submodule rank.
+
+Status as of 2026-07-28: **five of the six are PROVEN**, sorry-free, axioms
+`[propext, Classical.choice, Quot.sound]`, solutions in `OV/Proofs.lean`.
+`ov_license` alone remains **DECLARED-OPEN** (the MSY frontier; we do not
+claim it).
+
+* `ov_license` — the MSY-shaped chain, now with the hypotheses that make it
+  theorem-shaped. DECLARED-OPEN.
+* `ov_completeness` — **PROVEN** (see the `StarModule` note below). Free-Ax–Schanuel-shaped, upgraded from the `True`
+  placeholder: a rank drop in the word-indexed `E`-moment data implies a
+  nonzero noncommutative polynomial annihilating the tuple, with faithfulness
+  of `E` as the genericity parameter. Non-vacuous (fails for `E = 0`).
+* `ov_condition_number_theorem` — **PROVEN**. **PRIMARY form**: Demmel's theorem with the
+  distance valued in `B`, algebraic and geometric readings identified. The `⇒`
+  direction is already proved in `OV/Cond.lean`.
+* `ov_cnt_recovers_scalar` — **PROVEN**. The sanity condition: at `B = ℝ` the lift is
+  obliged to return exactly `λ_min(xᵀx)`.
+* `ov_dist_not_element_valued` — **PROVEN**. The tier's decisive negative, in registry
+  form. TARGET (the general reduction is proved; the `M₂(ℝ)` witness instance
+  is the remaining machine-checked step).
+* `ov_lojasiewicz_order` — **PROVEN**. **FALLBACK form** (STEERING 02a): the symbolic
+  order-of-vanishing statement, needing no metric — only a discriminant, a
+  deformation, and a per-direction integer order.
+
+#### Collapse test: result of the operator lift (PROVED, not proposed)
+
+The OV tier was opened on the thesis that *the condition number of an
+operator-valued problem is an element of `B`*. That thesis was tested
+deliberately, as required, and **the element-valued form is refuted**. The
+following are proved in `OV/Cond.lean` with zero sorries and axioms
+`[propext, Classical.choice, Quot.sound]`:
+
+* `globalInf_collapses` — the naive `dist_B`, defined as a global infimum over
+  `Σ`, is identically **zero**, exhibited in the most favourable instance
+  available: `B = ℝ × ℝ` (commutative, a lattice), `E = id` (no information
+  lost), `x = (1,2)` invertible with `κ = 2`. `Σ` is cheap in every direction
+  of `B`, so any global infimum is useless; the bound must be compressed to
+  `ker y`.
+* `bvaluedDistance_not_scalar` — the surviving object does **not** collapse to
+  `λ_min` or to a norm: `(1,2)` and `(2,1)` over `ℝ × ℝ` share every scalar
+  condition invariant (`‖x‖ = 2`, `σ_min = 1`, `κ = 2`) yet have distinct
+  `B`-valued distances `(1,4)` and `(4,1)`, both strictly above the best
+  scalar margin.
+* `isMargin_diagonal_iff` and `bvaluedDistance_fails_of_no_infimum` —
+  `dist_B` is element-valued for all `2×2` inputs **iff** the positive cone of
+  `B` is an inf-semilattice. By Kadison's anti-lattice theorem that fails over
+  **every factor**. So `dist_B` is a *certificate set*, not an element of `B`,
+  precisely for the noncommutative algebras this tier exists to serve.
+
+Consequently **we do not claim that the operator-valued condition number is an
+element of `B`**; we claim the opposite, and it is proved. The honest residue
+is a dichotomy: for abelian `B` the margin set is fibrewise a *componentwise*
+condition number, which is occupied literature (Skeel/Rohn/Higham — see
+`Conditioning/SWEEP.md` S2), so there is no novelty there; for noncommutative
+`B` the object is not element-valued at all, and it is the certificate-set
+formulation together with the anti-lattice obstruction that no literature was
+found to have.
+
+### Conditioning — the headline tier (Σ = singular matrices)
+
+All six are **PROVEN**, sorry-free, axioms `[propext, Classical.choice,
+Quot.sound]`, no `Float`, no `native_decide`, no allowlist extension.
+
+```lean
+theorem cond_check_sound {n : ℕ} (A : Matrix (Fin n) (Fin n) ℚ) (c : ℚ)
+    (h : Cond.condCheck A c = true) :
+    Cond.SigmaMinGE (Cond.toReal A) (c : ℝ) := sorry
+```
+→ `DiscoveryKernels.Cond.condCheck_sound` (`Conditioning/Checker.lean`).
+
+```lean
+section L2OperatorNormScope
+open scoped Matrix.Norms.L2Operator
+theorem cond_dist_to_illposed {n : ℕ} (A : Matrix (Fin n) (Fin n) ℚ) (c : ℚ)
+    (hn : 0 < n) (h : Cond.condCheck A c = true) :
+    (c : ℝ) ≤ Metric.infDist (Cond.toReal A) (Cond.SigmaSing n) := sorry
+end L2OperatorNormScope
+```
+→ `DiscoveryKernels.Cond.condCheck_le_infDist` (`Conditioning/Bridge.lean`).
+**The headline**: an executable exact-rational check certifies a lower bound
+on Mathlib's own `Metric.infDist` in Mathlib's own ℓ² operator norm. The
+`open scoped` is confined to this one declaration on purpose — that instance
+is not Mathlib's default `Matrix` norm, and removing the `open` silently
+states a different theorem about a different norm.
+
+```lean
+theorem cond_licenses_computation {n : ℕ} (A : Matrix (Fin n) (Fin n) ℚ) (c : ℚ)
+    (h : Cond.condCheck A c = true) (x y b b' : Fin n → ℝ)
+    (hx : Cond.toReal A *ᵥ x = b) (hy : Cond.toReal A *ᵥ y = b') (ε : ℝ)
+    (hε : Cond.sqNorm (b - b') ≤ ε ^ 2) :
+    (c : ℝ) ^ 2 * Cond.sqNorm (x - y) ≤ ε ^ 2 := sorry
+```
+→ `DiscoveryKernels.Cond.condCheck_licenses_solve` (`Conditioning/Checker.lean`).
+The tier's point: a certified margin converts input accuracy into output
+accuracy. Stated squared so no square roots and no `Float` appear.
+
+```lean
+theorem cond_eigenvalue_margin {n : ℕ} (A : Matrix (Fin n) (Fin n) ℚ) (c : ℚ)
+    (h : Cond.condCheck A c = true) (hA : (Cond.toReal A).IsHermitian) (j : Fin n) :
+    (c : ℝ) ≤ |hA.eigenvalues j| := sorry
+```
+→ `DiscoveryKernels.Cond.condCheck_hermitian_eigenvalue_margin`
+(`Conditioning/Bridge.lean`).
+
+```lean
+theorem cond_margin_sharp :
+    Cond.condCheck Cond.diagA 3 = true ∧
+      Cond.DistGE (Cond.toReal Cond.diagA) 3 ∧
+      (∀ c : ℝ, 3 < c → ¬ Cond.DistGE (Cond.toReal Cond.diagA) c) ∧
+      (∀ c : ℚ, Cond.condCheck Cond.diagA c = true → c ≤ 3) := sorry
+```
+→ `DiscoveryKernels.Cond.diag_dist_exact` (`Conditioning/Sharpness.lean`).
+**Sharpness witness 1**: on `!![3,0;0,5]` the checker's output is exactly 3
+and `dist(A, Σ) = 3` on the nose — tight, not conservative. The upper bound
+comes from an explicit certified perturbation landing in `Σ`, so nothing here
+uses Eckart–Young.
+
+```lean
+theorem cond_gershgorin_wall :
+    Cond.gramQ Cond.wallA 0 0 - Cond.gershRadiusQ (Cond.gramQ Cond.wallA) 0 = 0 ∧
+      (∀ c : ℚ, Cond.condCheck Cond.wallA c = true → c = 0) ∧
+      Cond.DistGE (Cond.toReal Cond.wallA) (1 / 2) := sorry
+```
+→ `DiscoveryKernels.Cond.gershgorin_wall` (`Conditioning/Sharpness.lean`).
+**Sharpness witness 2**: on the unimodular shear `!![1,1;0,1]` the
+diagonal-dominance margin is *exactly zero* — an equality between exact
+rationals, so no sharper enclosure helps — forcing the checker to `c = 0`,
+which is provably vacuous (`distGE_zero_vacuous`); yet the input is genuinely
+well-posed, `dist ≥ 1/2`. The zero is a property of the **engine**, not the
+input. Contrast `Cond.singular_dist_zero`, where a reported zero is the truth;
+certifying both is what makes a reported floor interpretable.
+
+## Status of every `sorry`
+
+Per STEERING 02, sorries are classified:
+
+* **Registry sorries** — every headline in `Challenge.lean` is `:= sorry` *by
+  construction*. `Challenge.lean` is a statement registry, never a proof
+  site; solutions live tier-side and are matched to it by the comparator
+  (definitional-equality check plus per-theorem axiom allowlist). A registry
+  `sorry` is not an open problem.
+* **Targets** (intended to be proven): the OV tier's statements are now
+  targets, not a permanent frontier marker. Their difficulty is real and no
+  timeline is claimed.
+* **Declared-open**: the infinite-dimensional operator-valued license in the
+  sense of Mai–Speicher–Yin is declared open. We do not claim it.
+
+## What we do NOT claim
+
+* **No novelty for Eckart–Young–Mirsky, Weyl, Courant–Fischer, or
+  Davis–Kahan.** These are formalized in Lean 4, sorry-free, in the
+  third-party library `YuanheZ/lean-stat-learning-theory` (core development
+  accepted at ICML 2026) — not in Mathlib, and not framed as conditioning,
+  but formalized. Eckart–Young–Mirsky in particular *is* the distance
+  identity for the rank-deficiency ill-posed set, so we claim no priority on
+  it. See `Conditioning/SWEEP.md` (S1) for the full verdict and evidence.
+  What this repository claims in that area is the conditioning layer that no
+  proof assistant was found to have: certified, executable, exact-arithmetic
+  **lower bounds** on `dist(x, Σ)` with soundness theorems, together with
+  **sharpness witnesses** where the bound degenerates.
+* **No novelty for floating-point or rounding-error verification.** That
+  field is mature and occupied (Flocq, VCFloat2, PRECiSA, Boldo et al.'s
+  Runge–Kutta round-off analysis, ITrees-based numerical methods in
+  Isabelle/HOL). We bound conditioning, not rounding, and make no
+  floating-point claim.
+* **No novelty for LLL formalization.** LLL is formalized in Isabelle/HOL
+  (Thiemann et al., 2018–2020) and announced for Lean via the Hex library
+  (FLoC 2026); see `PSLQ/DEPS.md`. This repository depends on neither.
+* **No claim to have formalized control theory.** arXiv 2607.19727
+  (Doll–Shames, 22 July 2026) formalizes Lyapunov stability and the
+  small-gain theorem in Lean; pole assignment — on Demmel's list — is not
+  formalized there, and is not formalized here either.
+* **Soundness only, never completeness.** Every checker theorem in this
+  repository has the shape `checker x = true → P x`. None claims the
+  converse: a checker that says "no" tells you nothing. PSLQ inherits this —
+  `pslq_partial_correct` says a *report* is a genuine relation, never that
+  the core finds a relation whenever one exists.
+* **No floating-point claims.** Everything is exact arithmetic (ℚ, ℤ) or
+  interval-/rational-certified statements about real quantities. No `Float`
+  appears in any statement or definition.
+* **No claim to formalize floating-point PSLQ as implemented in practice.**
+  We formalize an exact-arithmetic PSLQ-class core in the CSV/HJLS
+  normalization (Chen–Stehlé–Villard: equivalent to PSLQ up to scaling),
+  because textbook PSLQ's `H`-matrix is irrational even on rational input.
+* **No claim that `pslq_lower_bound` holds in a `min`-over-all-`j` form.**
+  It does not, and packaging it that way would be a fake theorem: the `n`
+  projected basis columns span an `(n−1)`-dimensional space, so exactly one
+  Gram–Schmidt direction necessarily degenerates and the `min` form is the
+  trivial bound `0`. The index `k` is therefore stated explicitly.
+* **No claim about sibling repositories.** `certified-positivity` is frozen
+  prior art, read and adapted at schema level only (its Lean pin differs);
+  `realization-lean` is not a dependency of this repository.
+* **No claim to prove the operator-valued license.** See the sorry
+  classification above.
+
+## Changelog
+
+* 2026-07-27 — FREEZE-0. Initial registry (then four tiers).
+  `pslq_partial_correct`, `pslq_lower_bound`, `ov_completeness` typed `True`
+  placeholders pending their tier definitional layers.
+* 2026-07-27 — **DESCOPE (STEERING 01).** R0 (scalar license / Kronecker)
+  and R2 (`DiscoveryKernel` interface) removed. Removed headlines:
+  `hankel_finite_rank_iff_rational`, `rational_iff_finitely_many_atoms`,
+  `discovery_kernel_inhabited`. The completed R2 artifact (frozen signature,
+  lemma library, zero-sorry toy instance) is preserved in git history at the
+  pre-descope commit.
+* 2026-07-27 — **`pslq_partial_correct` refined** from the `True` placeholder
+  to the real statement against the exact-arithmetic core `R1.pslq`, which
+  landed the same day:
+  `(h : R1.pslq x fuel = some m) : R1.IsIntRelation x m`.
+  Justification: the core proves strictly more than the registry stated, and
+  an unstated proof is not yet a claim. Soundness only; no completeness
+  claim is made or implied. Solution registered in the comparator and
+  audited green.
+* 2026-07-27 — **`pslq_lower_bound` refined** from the `True` placeholder to
+  the Borwein–Lisoněk-form statement over the state's own rational
+  (CSV/HJLS-normalized) Gram–Schmidt data. Justification: the bound is now
+  proven, and it is stated with the explicit index `k` rather than a `min`
+  over all `j`, because the `min` form is provably the trivial bound `0` (see
+  non-claims above). The unused hypothesis `hnone` is retained for
+  faithfulness to the "while no relation has been reported" reading; it makes
+  the headline weaker than what is proved, never stronger.
+* 2026-07-27 — **Novelty claim narrowed (STEERING 02, sweep S1).** The
+  blocking prior-art sweep found Eckart–Young–Mirsky, Weyl, Courant–Fischer
+  and Davis–Kahan already formalized in Lean 4 outside Mathlib. The
+  corresponding non-claim above was added before any Conditioning Lean was
+  written. Sweep S2 found the real-valued structured/mixed/componentwise
+  condition number literature to be large and mature, and no algebra-valued
+  condition number; the OV tier is on notice for the named collapse test.
+* 2026-07-27 — **Conditioning tier opened** as the headline claim, with
+  `Conditioning/SWEEP.md` (S1, S2) committed before any Lean in that tier.
+* 2026-07-27 — **Conditioning section landed FIRST in `Challenge.lean`**, ahead
+  of PSLQ: which claim leads is itself a claim. Six headlines added, all
+  proven and comparator-audited. Architectural note: the tier routes every
+  bound through `σ_min(A) ≥ c`, obtained by running a from-scratch Gershgorin
+  argument on the **exact rational Gram matrix** `AᵀA`. This covers arbitrary
+  square matrices rather than only symmetric ones, and it **avoids
+  Eckart–Young entirely** — deliberately, because sweep S1 found that theorem
+  already formalized in Lean 4 elsewhere. Nothing in this tier claims or uses
+  it.
+* 2026-07-28 — **`ov_completeness` weakened by one hypothesis, disclosed.**
+  `[StarModule ℂ A]` was added. This is a genuine weakening and is stated as
+  such. Justification: it was *proved* (`R3.star_algebraMap_not_in_range`) that
+  the compatibility axiom is **not** derivable from
+  `[Ring A] [StarRing A] [Algebra ℂ A]` — the witness is `ℂ × ℂ` with a twisted
+  star, where `star (algebraMap ℂ A I)` falls outside the range of
+  `algebraMap`, taking `star a` out of the ℂ-span of the words and breaking the
+  faithfulness argument. `StarModule ℂ A` holds in every C*-algebra and every
+  intended model. **No counterexample to the unhypothesised statement is
+  known**; the hypothesis repairs the proof route, it does not rescue a false
+  claim. With it, the statement is proven sorry-free.
+* 2026-07-28 — **Four further R3 targets proven** (`ov_dist_not_element_valued`
+  — the Kadison anti-lattice witness, rescaled to all-rational data;
+  `ov_condition_number_theorem` — both directions, `⇐` by the Eckart–Young
+  rank-one construction; `ov_lojasiewicz_order`; `ov_cnt_recovers_scalar`).
+  Note: `ov_cnt_recovers_scalar` did **not** require Courant–Fischer after all
+  — the spectral theorem plus `posSemidef_diagonal_iff` sufficed — so the
+  dependency flagged in `Conditioning/SWEEP.md` S1 is discharged for it.
+* 2026-07-28 — **R3/OV statements signed off and landed in the registry.**
+  The defective FREEZE-0 `ov_license` was replaced by the refined chain, the
+  `True` placeholder `ov_completeness` by a real statement, and four further
+  statements added: the PRIMARY metric Condition Number Theorem in `B`-valued
+  form, its scalar sanity condition, the element-valued negative, and the
+  FALLBACK symbolic Łojasiewicz form. `ov_license` is declared-open; the other
+  five are targets. Justification: leaving a statement proved false in the
+  registry is worse than any churn from replacing it.
+* 2026-07-27 — **OV element-valued thesis refuted** (proved, see the OV
+  section). The tier's founding claim — that the operator-valued condition
+  number is an element of `B` — is disproved for every factor; `dist_B` is a
+  certificate set. Recorded as a claim in its own right.

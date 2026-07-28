@@ -1,0 +1,29 @@
+name = "DiscoveryKernels"
+defaultTargets = ["Challenge", "Conditioning", "PSLQ", "OV"]
+
+[leanOptions]
+autoImplicit = false
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.32.0"
+
+[[lean_lib]]
+name = "Challenge"
+
+[[lean_lib]]
+name = "Conditioning"
+# Explicit module list, not a glob: `Conditioning/CHALLENGE-COND.proposed.lean`
+# is a proposal document (six by-design `sorry`s, and not a legal module name),
+# and must not be elaborated as part of the library.
+globs = ["Conditioning.Defs", "Conditioning.Gershgorin", "Conditioning.Margin",
+         "Conditioning.Checker", "Conditioning.Sharpness", "Conditioning.Bridge"]
+
+[[lean_lib]]
+name = "PSLQ"
+globs = ["PSLQ.+"]
+
+[[lean_lib]]
+name = "OV"
+globs = ["OV.+"]
