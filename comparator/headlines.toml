@@ -91,39 +91,39 @@ tier = "R3"
 [[headline]]
 name = "ov_completeness"
 challenge = "DiscoveryKernels.Challenge.ov_completeness"
-solution = ""
-module = ""
+solution = "DiscoveryKernels.R3.ov_completeness_of_starModule"
+module = "OV.Proofs"
 proven_required = false
 tier = "R3"
 
 [[headline]]
 name = "ov_condition_number_theorem"
 challenge = "DiscoveryKernels.Challenge.ov_condition_number_theorem"
-solution = ""
-module = ""
+solution = "DiscoveryKernels.R3.ov_condition_number_theorem"
+module = "OV.Proofs"
 proven_required = false
 tier = "R3"
 
 [[headline]]
 name = "ov_cnt_recovers_scalar"
 challenge = "DiscoveryKernels.Challenge.ov_cnt_recovers_scalar"
-solution = ""
-module = ""
+solution = "DiscoveryKernels.R3.ov_cnt_recovers_scalar"
+module = "OV.Proofs"
 proven_required = false
 tier = "R3"
 
 [[headline]]
 name = "ov_dist_not_element_valued"
 challenge = "DiscoveryKernels.Challenge.ov_dist_not_element_valued"
-solution = ""
-module = ""
+solution = "DiscoveryKernels.R3.ov_dist_not_element_valued"
+module = "OV.Proofs"
 proven_required = false
 tier = "R3"
 
 [[headline]]
 name = "ov_lojasiewicz_order"
 challenge = "DiscoveryKernels.Challenge.ov_lojasiewicz_order"
-solution = ""
-module = ""
+solution = "DiscoveryKernels.R3.ov_lojasiewicz_order"
+module = "OV.Proofs"
 proven_required = false
 tier = "R3"

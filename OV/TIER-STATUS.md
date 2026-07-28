@@ -1,8 +1,57 @@
 # TIER-STATUS — R3 — operator lift of the conditioning tier
 
 Reframed by STEERING-02 (2026-07-27): R3 is the OPERATOR LIFT of
-`Conditioning/`. Sorries are now labelled TARGET (intended to be proven) or
+`Conditioning/`. Sorries are labelled TARGET (intended to be proven) or
 DECLARED-OPEN (frontier, no proof claimed).
+
+**2026-07-28 — statements SIGNED OFF by the operator and live in
+`Challenge.lean`. Proof phase run. Headline status now:**
+
+| Challenge headline | Status | Solution constant (`OV/Proofs.lean`) |
+|---|---|---|
+| `ov_dist_not_element_valued` | **PROVEN** | `DiscoveryKernels.R3.ov_dist_not_element_valued` |
+| `ov_condition_number_theorem` | **PROVEN** | `DiscoveryKernels.R3.ov_condition_number_theorem` |
+| `ov_cnt_recovers_scalar` | **PROVEN** | `DiscoveryKernels.R3.ov_cnt_recovers_scalar` |
+| `ov_lojasiewicz_order` | **PROVEN** | `DiscoveryKernels.R3.ov_lojasiewicz_order` |
+| `ov_completeness` | **TARGET-still-open** (1 labelled `sorry`) | `DiscoveryKernels.R3.ov_completeness` (conditional forms proven: `…_of_star_scalars`, `…_of_starModule`) |
+| `ov_license` | **DECLARED-OPEN** (MSY frontier; not attempted) | — |
+
+All four proven solutions were checked with the comparator's own `isDefEq`
+test against the frozen `Challenge.lean` statements (5/5 statement matches,
+including the still-open `ov_completeness`) and with `#print axioms`: every
+one is `[propext, Classical.choice, Quot.sound]`. No `native_decide`, no
+`Float`, no allowlist extension requested. Comparator rows to apply:
+`OV/COMPARATOR-ROWS.md`.
+
+### The one open target, stated precisely
+
+`ov_completeness` is proved except for a single missing input, and the gap is
+a STATEMENT-level omission, not a proof failure:
+
+* `DiscoveryKernels.R3.ov_completeness_of_star_scalars` — the entire argument,
+  `sorry`-free, under the extra hypothesis
+  `hscal : ∀ z : ℂ, ∃ z', star (algebraMap ℂ A z) = algebraMap ℂ A z'`.
+* `DiscoveryKernels.R3.ov_completeness_of_starModule` — the same, `sorry`-free,
+  under `[StarModule ℂ A]` (which supplies `hscal`). This is the intended
+  setting: `A` an honest `*`-algebra over `ℂ` (Mai–Speicher–Weber).
+* The frozen statement assumes only `[Ring A] [StarRing A] [Algebra ℂ A]`,
+  which does NOT imply `hscal` — and that is itself now MACHINE-CHECKED:
+  `DiscoveryKernels.R3.star_algebraMap_not_in_range` (no `sorry`) exhibits
+  `TwistCC = ℂ × ℂ` with `algebraMap z = (z,z)` and `star (s,t) = (s, conj t)`,
+  a lawful `StarRing` + `Algebra ℂ` pair with
+  `star (algebraMap ℂ A I) = (I, -I) ∉ Set.range (algebraMap ℂ A)`.
+  Without `hscal` the ℂ-span `W` of the words `x_w` is not `star`-stable, so
+  `star a` (for `a` the alignment combination) need not lie in `W` and the
+  faithfulness hypothesis cannot be applied to it.
+* HONEST CAVEAT: this shows the natural route is blocked, NOT that the
+  headline is false — no counterexample to `ov_completeness` itself was found
+  (faithfulness is a strong hypothesis and defeated every candidate tried:
+  `ℂ × ℂ`, `ℂ[X] × ℂ[X]`, the `d = 0` and scalar `d = 1` cases).
+* RECOMMENDATION to the operator (statement change, NOT made unilaterally):
+  add `[StarModule ℂ A]` to `Challenge.ov_completeness`. That one instance
+  argument turns the labelled `sorry` into
+  `ov_completeness_of_starModule …` verbatim. Per faithful-or-wipe the frozen
+  statement was left untouched.
 
 ## Proven (no `sorry`, in `OV/Cond.lean`)
 
@@ -27,17 +76,46 @@ Symbolic (fallback) form, in `OV/Symbolic.lean` — also no `sorry`:
 * `exponentTuple_not_constant_noncomm` — NONCOMMUTATIVE witness: orders `1`
   and `2` for `t ↦ e₁t + e₂t²` over `M₂(ℝ)`.
 
+## Proven (no `sorry`, in `OV/Proofs.lean` — the 2026-07-28 proof phase)
+
+* `psd_two`, `quad_of_le`, `herm_of_le` — a 2×2 real Loewner toolkit (PSD from
+  minors via an explicit SOS identity; quadratic form and symmetry read off
+  the order). No eigenvalue machinery.
+* `kd₁`, `kd₂`, `kd₁_sq`, `kd₂_sq`, `kdC`, `kadison_no_inf` — the
+  MACHINE-CHECKED Kadison anti-lattice instance in `M₂(ℝ)`:
+  `d₁ = !![2,0;0,1]`, `d₂ = !![2,1;0,2]`, so `d₁*d₁ = !![4,0;0,1]` and
+  `d₂*d₂ = !![4,2;2,5]`; both `1` and `!![31/10,0;0,0]` are positive common
+  lower bounds and no greatest one exists. (A rescaling of the hand-verified
+  pair in `CHALLENGE-R3.proposed.md` §3b.3, chosen so the two positive
+  elements have RATIONAL square roots — the reduction consumes `star d * d`,
+  so rational factors keep the whole witness in exact arithmetic.)
+* `ov_dist_not_element_valued` — the tier's decisive negative, now fully
+  machine-checked.
+* `ov_condition_number_theorem` — both directions; `⇐` is the Eckart–Young
+  rank-one `y = x - (xξ)ξ*`, with the degenerate `IsUnit y` branch handled
+  honestly (it forces `ξ = 0`, hence `1 = 0` in `B`, hence `Subsingleton B`).
+* `quad_id`, `isHermitian_smul_one`, `shifted_spectral`,
+  `posSemidef_shift_iff`, `ov_cnt_recovers_scalar` — the scalar base case.
+  **Courant–Fischer was NOT needed**: `A - t·1` is unitarily conjugate to
+  `diagonal (λ - t)` via `Matrix.IsHermitian.spectral_theorem`, and
+  `Matrix.posSemidef_diagonal_iff` finishes. This closes the dependency
+  flagged in `Conditioning/SWEEP.md` S1 for this statement.
+* `ov_lojasiewicz_order` — the symbolic FALLBACK form.
+* `lift_ncMonomial`, `star_lift`, `basisFreeMonoid_eq`, `ncPoly_ne_zero`,
+  `ov_completeness_of_star_scalars`, `ov_completeness_of_starModule` — the
+  completeness machinery (see the gap note at the top).
+
 ## Sorry ledger (every sorry labelled)
 
 | Statement | File | Label |
 |---|---|---|
-| `ov_license` (MSY iff-chain, positivity-corrected) | `CHALLENGE-R3.proposed.lean` | DECLARED-OPEN (frontier; true for `B = ℂ`, `Mₚ(ℂ)`) |
-| `ov_completeness` (alignment ⇒ structural cause) | `CHALLENGE-R3.proposed.lean` | TARGET (proof sketch in the .md: faithfulness + self-adjointness) |
-| `ov_condition_number_theorem` (`B`-valued CNT) | `CHALLENGE-R3.proposed.lean` | TARGET (`⇒` already proved; `⇐` = Eckart–Young rank-one) |
-| `ov_cnt_recovers_scalar` (`B = ℝ` ⇒ `λ_min`) | `CHALLENGE-R3.proposed.lean` | TARGET (needs Courant–Fischer, absent from Mathlib — SWEEP S1) |
-| `ov_dist_not_element_valued` (Kadison witness in `M₂(ℝ)`) | `CHALLENGE-R3.proposed.lean` | TARGET (hand-verified exact rational arithmetic in the .md; the reduction it rests on is already proved) |
-| `ov_lojasiewicz_order` (symbolic FALLBACK form) | `CHALLENGE-R3.proposed.lean` | TARGET (order-of-vanishing bookkeeping + faithfulness of the positive cone) |
-| Challenge.lean R3 entries (FREEZE-0 text) | `Challenge.lean` | untouched; superseded by the proposals below |
+| `ov_license` (MSY iff-chain, positivity-corrected) | `Challenge.lean` | DECLARED-OPEN (frontier; true for `B = ℂ`, `Mₚ(ℂ)`). Not attempted per steering. |
+| `ov_completeness` (alignment ⇒ structural cause) | `Challenge.lean`, `OV/Proofs.lean` | TARGET-still-open — ONE labelled `sorry`; missing hypothesis identified exactly (`hscal` / `[StarModule ℂ A]`), conditional forms proven |
+| `ov_condition_number_theorem` | `Challenge.lean` | **PROVEN** in `OV/Proofs.lean` |
+| `ov_cnt_recovers_scalar` | `Challenge.lean` | **PROVEN** in `OV/Proofs.lean` |
+| `ov_dist_not_element_valued` | `Challenge.lean` | **PROVEN** in `OV/Proofs.lean` |
+| `ov_lojasiewicz_order` | `Challenge.lean` | **PROVEN** in `OV/Proofs.lean` |
+| `OV/CHALLENGE-R3.proposed.lean` (6 sorries) | proposal document | superseded by `Challenge.lean` + `OV/Proofs.lean`; kept as the provenance record. Deleting it would drop the tier's sorry count by 6 — operator's call. |
 
 ## COLLAPSE VERDICT (first-class result, stated plainly)
 
@@ -90,13 +168,16 @@ proof library remains CLOSED.
 `VOCAB.md` (Mathlib survey), `Vocab.lean` (OV definitional layer),
 `Cond.lean` (metric conditioning layer, all proofs complete),
 `Symbolic.lean` (symbolic/Łojasiewicz layer, all proofs complete),
-`CHALLENGE-R3.proposed.{lean,md}`. `lake build OV` and
-`lake build Challenge` green; `Challenge.lean` untouched.
+`Proofs.lean` (**the 2026-07-28 proof phase: 4 headlines proven, 1 labelled
+`sorry`**), `COMPARATOR-ROWS.md` (rows for the orchestrator to apply),
+`CHALLENGE-R3.proposed.{lean,md}` (provenance). `lake build OV` and
+`lake build Challenge` green; `Challenge.lean` untouched by this agent.
 
-## PENDING HUMAN REVIEW
+## SIGNED OFF (historical: the review gate this tier was held at)
 
-All six statements below are PROPOSALS (R3 charter hard gate); the
-orchestrator holds the merge until the operator approves. Justification,
+All six statements below were PROPOSALS under the R3 charter hard gate; the
+operator SIGNED THEM OFF on 2026-07-28 and they are now live in
+`Challenge.lean`. Text retained for provenance. Justification,
 counterexamples and the collapse verdict: `CHALLENGE-R3.proposed.md`;
 definitions: `OV/Vocab.lean`, `OV/Cond.lean` (both extend, and do not
 alter, FREEZE-0 `Defs.lean`).

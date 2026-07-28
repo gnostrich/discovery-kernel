@@ -75,27 +75,28 @@ gap against realizations. The refined chain adds positivity hypotheses
 (`IsOVMomentSequence` over a `StarOrderedRing`), star-corrects atomicity, and
 uses the Fliess stable-submodule rank.
 
-Sorry status: `ov_license` is **DECLARED-OPEN** (the MSY frontier; we do not
-claim it). The other five are **TARGETS** — intended to be proven, no timeline
-claimed.
+Status as of 2026-07-28: **five of the six are PROVEN**, sorry-free, axioms
+`[propext, Classical.choice, Quot.sound]`, solutions in `OV/Proofs.lean`.
+`ov_license` alone remains **DECLARED-OPEN** (the MSY frontier; we do not
+claim it).
 
 * `ov_license` — the MSY-shaped chain, now with the hypotheses that make it
   theorem-shaped. DECLARED-OPEN.
-* `ov_completeness` — free-Ax–Schanuel-shaped, upgraded from the `True`
+* `ov_completeness` — **PROVEN** (see the `StarModule` note below). Free-Ax–Schanuel-shaped, upgraded from the `True`
   placeholder: a rank drop in the word-indexed `E`-moment data implies a
   nonzero noncommutative polynomial annihilating the tuple, with faithfulness
-  of `E` as the genericity parameter. Non-vacuous (fails for `E = 0`). TARGET.
-* `ov_condition_number_theorem` — **PRIMARY form**: Demmel's theorem with the
+  of `E` as the genericity parameter. Non-vacuous (fails for `E = 0`).
+* `ov_condition_number_theorem` — **PROVEN**. **PRIMARY form**: Demmel's theorem with the
   distance valued in `B`, algebraic and geometric readings identified. The `⇒`
-  direction is already proved in `OV/Cond.lean`. TARGET.
-* `ov_cnt_recovers_scalar` — the sanity condition: at `B = ℝ` the lift is
-  obliged to return exactly `λ_min(xᵀx)`. TARGET.
-* `ov_dist_not_element_valued` — the tier's decisive negative, in registry
+  direction is already proved in `OV/Cond.lean`.
+* `ov_cnt_recovers_scalar` — **PROVEN**. The sanity condition: at `B = ℝ` the lift is
+  obliged to return exactly `λ_min(xᵀx)`.
+* `ov_dist_not_element_valued` — **PROVEN**. The tier's decisive negative, in registry
   form. TARGET (the general reduction is proved; the `M₂(ℝ)` witness instance
   is the remaining machine-checked step).
-* `ov_lojasiewicz_order` — **FALLBACK form** (STEERING 02a): the symbolic
+* `ov_lojasiewicz_order` — **PROVEN**. **FALLBACK form** (STEERING 02a): the symbolic
   order-of-vanishing statement, needing no metric — only a discriminant, a
-  deformation, and a per-direction integer order. TARGET.
+  deformation, and a per-direction integer order.
 
 #### Collapse test: result of the operator lift (PROVED, not proposed)
 
@@ -313,6 +314,24 @@ Per STEERING 02, sorries are classified:
   Eckart–Young entirely** — deliberately, because sweep S1 found that theorem
   already formalized in Lean 4 elsewhere. Nothing in this tier claims or uses
   it.
+* 2026-07-28 — **`ov_completeness` weakened by one hypothesis, disclosed.**
+  `[StarModule ℂ A]` was added. This is a genuine weakening and is stated as
+  such. Justification: it was *proved* (`R3.star_algebraMap_not_in_range`) that
+  the compatibility axiom is **not** derivable from
+  `[Ring A] [StarRing A] [Algebra ℂ A]` — the witness is `ℂ × ℂ` with a twisted
+  star, where `star (algebraMap ℂ A I)` falls outside the range of
+  `algebraMap`, taking `star a` out of the ℂ-span of the words and breaking the
+  faithfulness argument. `StarModule ℂ A` holds in every C*-algebra and every
+  intended model. **No counterexample to the unhypothesised statement is
+  known**; the hypothesis repairs the proof route, it does not rescue a false
+  claim. With it, the statement is proven sorry-free.
+* 2026-07-28 — **Four further R3 targets proven** (`ov_dist_not_element_valued`
+  — the Kadison anti-lattice witness, rescaled to all-rational data;
+  `ov_condition_number_theorem` — both directions, `⇐` by the Eckart–Young
+  rank-one construction; `ov_lojasiewicz_order`; `ov_cnt_recovers_scalar`).
+  Note: `ov_cnt_recovers_scalar` did **not** require Courant–Fischer after all
+  — the spectral theorem plus `posSemidef_diagonal_iff` sufficed — so the
+  dependency flagged in `Conditioning/SWEEP.md` S1 is discharged for it.
 * 2026-07-28 — **R3/OV statements signed off and landed in the registry.**
   The defective FREEZE-0 `ov_license` was replaced by the refined chain, the
   `True` placeholder `ov_completeness` by a real statement, and four further

@@ -41,6 +41,7 @@ Witness arithmetic for the first (all exact, all rational):
 import Mathlib
 import OV.Cond
 import OV.Symbolic
+import OV.Vocab
 
 namespace DiscoveryKernels.R3
 
@@ -394,5 +395,203 @@ theorem ov_lojasiewicz_order
     have hpos : 0 < star (ovDatumCoeff B X ξ k i₀) * (ovDatumCoeff B X ξ k i₀) :=
       lt_of_le_of_ne (star_mul_self_nonneg _) (fun hz => hcoeff (hfaith _ hz.symm))
     exact Finset.sum_pos' (fun i _ => star_mul_self_nonneg _) ⟨i₀, Finset.mem_univ i₀, hpos⟩
+
+/-! ## §6 Operator-valued completeness — CONDITIONALLY PROVED, one honest gap
+
+The mathematical argument is complete and machine-checked in
+`ov_completeness_of_star_scalars` below. It needs ONE ingredient that the
+frozen `Challenge.ov_completeness` does not supply: that `star` maps the image
+of `algebraMap ℂ A` back into itself (`hscal`). Without it the ℂ-linear span
+`W` of the words `x_w` is not `star`-stable, so `star a` — where `a` is the
+alignment combination — need not lie in `W`, and the faithfulness hypothesis
+`hfaith` cannot be applied to it. `hscal` is automatic in any `*`-algebra over
+`ℂ` (`[StarModule ℂ A]`, see `ov_completeness_of_starModule`), which is the
+intended setting (Mai–Speicher–Weber); it is NOT derivable from
+`[Ring A] [StarRing A] [Algebra ℂ A]` alone — e.g. `A = ℂ × ℂ` with
+`algebraMap z = (z, z)` and `star (s,t) = (s, t̄)` is a legal `StarRing` +
+`Algebra ℂ` structure with `star (algebraMap ℂ A i) = (i, -i) ∉ range`.
+
+Reported as an honest gap, not a proof: `ov_completeness` below carries a
+single labelled `sorry`. See `OV/TIER-STATUS.md`. -/
+
+section Completeness
+
+variable {A : Type*} [Ring A] [Algebra ℂ A]
+
+/-- Evaluating a noncommutative monomial at `x` is the word product. -/
+lemma lift_ncMonomial {d : ℕ} (x : Fin d → A) (w : FreeMonoid (Fin d)) :
+    FreeAlgebra.lift ℂ x (ncMonomial d w) = FreeMonoid.lift x w := by
+  simp [ncMonomial, FreeMonoid.lift_apply, map_list_prod, List.map_map]
+
+/-- For a SELF-ADJOINT tuple, `star` reverses words. -/
+lemma star_lift {A : Type*} [Ring A] [StarRing A] {d : ℕ} (x : Fin d → A)
+    (hsa : ∀ i, star (x i) = x i) (w : FreeMonoid (Fin d)) :
+    star (FreeMonoid.lift x w) = FreeMonoid.lift x (FreeMonoid.reverse w) := by
+  induction w using FreeMonoid.recOn with
+  | h0 => rw [show FreeMonoid.reverse (1 : FreeMonoid (Fin d)) = 1 from rfl]; simp
+  | ih i v ihv =>
+    rw [map_mul, star_mul, ihv, FreeMonoid.reverse_mul, FreeMonoid.reverse_of, map_mul]
+    simp [hsa]
+
+/-- The `FreeMonoid` basis of `FreeAlgebra ℂ (Fin d)` IS the monomial family
+`ncMonomial`; this is what makes "nonzero coefficients ⇒ nonzero polynomial"
+true rather than merely plausible. -/
+lemma basisFreeMonoid_eq (d : ℕ) (w : FreeMonoid (Fin d)) :
+    FreeAlgebra.basisFreeMonoid ℂ (Fin d) w = ncMonomial d w := by
+  simp [FreeAlgebra.basisFreeMonoid, ncMonomial,
+    FreeAlgebra.equivMonoidAlgebraFreeMonoid, AlgEquiv.ofAlgHom_symm]
+
+/-- A nonzero coefficient vector gives a nonzero noncommutative polynomial. -/
+lemma ncPoly_ne_zero {d : ℕ} (c : FreeMonoid (Fin d) →₀ ℂ) (hc : c ≠ 0) :
+    (c.sum fun w z => z • ncMonomial d w) ≠ 0 := by
+  have hrepr : (FreeAlgebra.basisFreeMonoid ℂ (Fin d)).repr.symm c
+      = c.sum fun w z => z • ncMonomial d w := by
+    rw [Module.Basis.repr_symm_apply, Finsupp.linearCombination_apply]
+    exact Finsupp.sum_congr fun w _ => by rw [basisFreeMonoid_eq]
+  rw [← hrepr]
+  simp only [ne_eq, EmbeddingLike.map_eq_zero_iff]
+  exact hc
+
+/-- **Operator-valued completeness, CONDITIONAL FORM — PROVED (no `sorry`).**
+Every genuine OV alignment has a structural cause, provided `star` preserves
+the image of the scalars (`hscal`).
+
+Proof: the alignment coefficient vector `c` assembles `a = ∑ c_w x_w ∈ A`, and
+the alignment says exactly `E (a · x_{w'}) = 0` for every word `w'`. Because
+the tuple is self-adjoint, `star (x_w) = x_{rev w}`, and because of `hscal`
+the scalars survive the `star`, so `star a` is again a ℂ-combination of words
+— whence `E (a · star a) = 0`, i.e. `E (star (star a) · star a) = 0`, and
+`hfaith` gives `star a = 0`, i.e. `a = 0`. The polynomial
+`p = ∑ c_w · (monomial w)` is then nonzero (`basisFreeMonoid`), supported in
+degree ≤ n, and annihilates `x`. -/
+theorem ov_completeness_of_star_scalars
+    {A : Type} [Ring A] [StarRing A] [Algebra ℂ A]
+    {B : Type} [AddCommGroup B] [Module ℂ B]
+    (E : A →ₗ[ℂ] B) {d : ℕ} (x : Fin d → A) (n : ℕ)
+    (hsa : ∀ i, star (x i) = x i)
+    (hfaith : ∀ a : A, E (star a * a) = 0 → a = 0)
+    (hscal : ∀ z : ℂ, ∃ z' : ℂ, star (algebraMap ℂ A z) = algebraMap ℂ A z')
+    (halign : R3.HasOVAlignment E x n) :
+    R3.HasPolyCause x n := by
+  classical
+  obtain ⟨c, hc0, hlen, hal⟩ := halign
+  set a : A := c.sum (fun w z => z • FreeMonoid.lift x w) with hadef
+  have key : ∀ w' : FreeMonoid (Fin d), E (a * FreeMonoid.lift x w') = 0 := by
+    intro w'
+    rw [← hal w', hadef, Finsupp.sum, Finsupp.sum, Finset.sum_mul, map_sum]
+    refine Finset.sum_congr rfl fun w _ => ?_
+    rw [smul_mul_assoc, map_smul, ← map_mul]
+  have h2 : E (a * star a) = 0 := by
+    have hstar : star a = ∑ w ∈ c.support, star ((c w) • FreeMonoid.lift x w) := by
+      rw [hadef, Finsupp.sum, star_sum]
+    rw [hstar, Finset.mul_sum, map_sum]
+    refine Finset.sum_eq_zero fun w _ => ?_
+    obtain ⟨z', hz'⟩ := hscal (c w)
+    have hst : star ((c w) • FreeMonoid.lift x w)
+        = z' • FreeMonoid.lift x (FreeMonoid.reverse w) := by
+      rw [Algebra.smul_def, star_mul, star_lift x hsa, hz', Algebra.smul_def, Algebra.commutes]
+    rw [hst, mul_smul_comm, map_smul, key, smul_zero]
+  have hsa0 : star a = 0 := hfaith (star a) (by rw [star_star]; exact h2)
+  have ha0 : a = 0 := by
+    have := congrArg star hsa0
+    simpa using this
+  refine ⟨c.sum fun w z => z • ncMonomial d w, ncPoly_ne_zero c hc0, ?_, ?_⟩
+  · rw [Finsupp.sum]
+    exact Submodule.sum_mem _ fun w hw =>
+      Submodule.smul_mem _ _ (Submodule.subset_span ⟨w, hlen w hw, rfl⟩)
+  · rw [Finsupp.sum, map_sum, ← ha0, hadef, Finsupp.sum]
+    exact Finset.sum_congr rfl fun w _ => by rw [map_smul, lift_ncMonomial]
+
+/-- **Operator-valued completeness for genuine `*`-algebras over `ℂ` — PROVED
+(no `sorry`).** With `[StarModule ℂ A]` — i.e. `A` an honest `*`-algebra, the
+setting of the Mai–Speicher–Weber regularity line — the conditional hypothesis
+is automatic and the headline holds outright. -/
+theorem ov_completeness_of_starModule
+    {A : Type} [Ring A] [StarRing A] [Algebra ℂ A] [StarModule ℂ A]
+    {B : Type} [AddCommGroup B] [Module ℂ B]
+    (E : A →ₗ[ℂ] B) {d : ℕ} (x : Fin d → A) (n : ℕ)
+    (hsa : ∀ i, star (x i) = x i)
+    (hfaith : ∀ a : A, E (star a * a) = 0 → a = 0)
+    (halign : R3.HasOVAlignment E x n) :
+    R3.HasPolyCause x n :=
+  ov_completeness_of_star_scalars E x n hsa hfaith
+    (fun z => ⟨starRingEnd ℂ z, by
+      rw [Algebra.algebraMap_eq_smul_one, Algebra.algebraMap_eq_smul_one, star_smul, star_one]
+      rfl⟩)
+    halign
+
+/-! ### The gap is real: a lawful instance pair violating `hscal` -/
+
+/-- `ℂ × ℂ` carrying the NON-standard star `(s,t) ↦ (s, conj t)`. All the
+`StarRing` laws hold (the ring is commutative, so `star_mul` is just
+multiplicativity), and the `Algebra ℂ` structure is the standard diagonal one
+`z ↦ (z,z)`. This is a legal instantiation of `ov_completeness`'s hypotheses
+`[Ring A] [StarRing A] [Algebra ℂ A]`. -/
+def TwistCC : Type := ℂ × ℂ
+
+noncomputable instance : CommRing TwistCC := inferInstanceAs (CommRing (ℂ × ℂ))
+noncomputable instance : Algebra ℂ TwistCC := inferInstanceAs (Algebra ℂ (ℂ × ℂ))
+instance : Nontrivial TwistCC := inferInstanceAs (Nontrivial (ℂ × ℂ))
+
+noncomputable instance : StarRing TwistCC where
+  star p := (((p : ℂ × ℂ).1, starRingEnd ℂ (p : ℂ × ℂ).2) : ℂ × ℂ)
+  star_involutive p := by
+    obtain ⟨a, b⟩ := p
+    show ((a, starRingEnd ℂ (starRingEnd ℂ b)) : ℂ × ℂ) = ((a, b) : ℂ × ℂ)
+    simp
+  star_mul p q := by
+    obtain ⟨a, b⟩ := p
+    obtain ⟨u, v⟩ := q
+    show ((a * u, starRingEnd ℂ (b * v)) : ℂ × ℂ)
+      = (((u, starRingEnd ℂ v) : ℂ × ℂ) * ((a, starRingEnd ℂ b) : ℂ × ℂ))
+    simp [mul_comm]
+  star_add p q := by
+    obtain ⟨a, b⟩ := p
+    obtain ⟨u, v⟩ := q
+    show ((a + u, starRingEnd ℂ (b + v)) : ℂ × ℂ)
+      = (((a, starRingEnd ℂ b) : ℂ × ℂ) + ((u, starRingEnd ℂ v) : ℂ × ℂ))
+    simp
+
+/-- **PROVED: the missing hypothesis really is missing.** `hscal` is NOT a
+consequence of `[Ring A] [StarRing A] [Algebra ℂ A]` — over `TwistCC`,
+`star (algebraMap ℂ A i) = (i, -i)` lies outside the range of `algebraMap`
+(the diagonal). So the `sorry` below is a genuine statement-level gap, not a
+proof that was merely not found. -/
+theorem star_algebraMap_not_in_range :
+    ¬ ∀ z : ℂ, ∃ z' : ℂ, star (algebraMap ℂ TwistCC z) = algebraMap ℂ TwistCC z' := by
+  intro h
+  obtain ⟨z', hz'⟩ := h Complex.I
+  have h1 : star (algebraMap ℂ TwistCC Complex.I)
+      = ((Complex.I, starRingEnd ℂ Complex.I) : ℂ × ℂ) := rfl
+  have h2 : (algebraMap ℂ TwistCC z' : ℂ × ℂ) = ((z', z') : ℂ × ℂ) := rfl
+  rw [h1, h2] at hz'
+  have hfst := congrArg Prod.fst hz'
+  have hsnd := congrArg Prod.snd hz'
+  simp only at hfst hsnd
+  rw [← hfst, Complex.conj_I] at hsnd
+  simp [Complex.ext_iff] at hsnd
+  norm_num at hsnd
+
+/-- **TARGET — NOT PROVED. One honest, labelled `sorry`.**
+`Challenge.ov_completeness`. The full argument is machine-checked in
+`ov_completeness_of_star_scalars`; the ONLY missing input is `hscal`
+(`star` preserves `Set.range (algebraMap ℂ A)`), which the frozen statement
+does not provide and which is NOT a consequence of
+`[Ring A] [StarRing A] [Algebra ℂ A]`. Adding `[StarModule ℂ A]` to the
+statement closes it immediately (`ov_completeness_of_starModule`). Flagged
+for the operator: this is a statement-level omission, not a proof failure,
+and per the faithful-or-wipe rule the statement has NOT been adjusted. -/
+theorem ov_completeness
+    {A : Type} [Ring A] [StarRing A] [Algebra ℂ A]
+    {B : Type} [AddCommGroup B] [Module ℂ B]
+    (E : A →ₗ[ℂ] B) {d : ℕ} (x : Fin d → A) (n : ℕ)
+    (hsa : ∀ i, star (x i) = x i)
+    (hfaith : ∀ a : A, E (star a * a) = 0 → a = 0)
+    (halign : R3.HasOVAlignment E x n) :
+    R3.HasPolyCause x n := by
+  -- LABELLED SORRY (R3/OV, 2026-07-28): missing hypothesis `hscal`, see above.
+  sorry
+
+end Completeness
 
 end DiscoveryKernels.R3

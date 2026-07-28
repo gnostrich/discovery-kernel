@@ -262,9 +262,20 @@ nonzero scalar row combination of `{E (x_{w ·}) : |w| ≤ n}` vanishes
 identically), then there is a *structural cause*: a nonzero noncommutative
 polynomial of degree ≤ `n` in `FreeAlgebra ℂ (Fin d)` annihilating the tuple
 under evaluation. The alignment is never a numerical accident: it certifies
-an exact algebraic relation. `sorry` BY DESIGN. -/
+an exact algebraic relation.
+
+`[StarModule ℂ A]` — the compatibility axiom `star (c • a) = star c • star a`,
+satisfied by every C*-algebra and every intended model — was ADDED on
+2026-07-28 (a disclosed weakening; see STATEMENTS.md changelog). It is not
+cosmetic: without it `star (algebraMap ℂ A z)` can fall outside the range of
+`algebraMap`, which takes `star a` out of the ℂ-span of the words and blocks
+the faithfulness argument. That this cannot be derived from
+`[Ring A] [StarRing A] [Algebra ℂ A]` alone is itself PROVED
+(`R3.star_algebraMap_not_in_range`, with `ℂ × ℂ` under a twisted star as the
+witness). No counterexample to the unhypothesised statement is known; the
+hypothesis repairs the route, it does not rescue a false claim. -/
 theorem ov_completeness
-    {A : Type} [Ring A] [StarRing A] [Algebra ℂ A]
+    {A : Type} [Ring A] [StarRing A] [Algebra ℂ A] [StarModule ℂ A]
     {B : Type} [AddCommGroup B] [Module ℂ B]
     (E : A →ₗ[ℂ] B) {d : ℕ} (x : Fin d → A) (n : ℕ)
     (hsa : ∀ i, star (x i) = x i)
