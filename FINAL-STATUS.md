@@ -1,11 +1,11 @@
 # FINAL-STATUS — discovery-kernels
 
-Date: **2026-07-27**. Toolchain: Lean 4 `v4.32.0`, Mathlib `v4.32.0` (pinned
+Date: **2026-07-28**. Toolchain: Lean 4 `v4.32.0`, Mathlib `v4.32.0` (pinned
 in `lake-manifest.json`). CI: `lake build` + `comparator/comparator.py` on
 every push and PR.
 
-**Repository state: 9 of 9 required headlines proven; comparator PASS; CI
-green.** No `Float`, no `native_decide`, no allowlist extension anywhere in
+**Repository state: 9 of 9 required headlines proven; 15 headlines in the
+registry; comparator PASS; CI green.** No `Float`, no `native_decide`, no allowlist extension anywhere in
 the repository. Every proven solution depends on exactly
 `[propext, Classical.choice, Quot.sound]`.
 
@@ -131,14 +131,17 @@ requested**. `sorryAx` is fatal for solutions and appears in none.
 
 ## Open sorries
 
-* **Registry sorries** — all 11 headlines in `Challenge.lean` are `:= sorry`
+* **Registry sorries** — all 15 headlines in `Challenge.lean` are `:= sorry`
   by construction. `Challenge.lean` is a statement registry, never a proof
   site; solutions live tier-side and are matched by definitional equality.
   These are not open problems.
-* **OV proposal sorries** — 5 statements in `OV/CHALLENGE-R3.proposed.lean`,
-  awaiting human sign-off. Labelled in `OV/TIER-STATUS.md`: 4 **targets**,
-  1 **declared-open** (`ov_license`).
-* **No other sorries exist in the repository.**
+* **OV targets** — 5 of the 6 signed-off OV statements have no solution yet
+  and are labelled **TARGET** in `OV/TIER-STATUS.md`: they are intended to be
+  proven and are under active work. `ov_license` alone is **DECLARED-OPEN**
+  (the Mai–Speicher–Yin frontier); we do not claim it.
+* **No other sorries exist in the repository.** The proved OV supporting
+  layers (`OV/Cond.lean`, `OV/Symbolic.lean`), which carry both collapse-test
+  verdicts, are entirely sorry-free.
 
 ## Statements changed after FREEZE-0 (all dated in STATEMENTS.md)
 
