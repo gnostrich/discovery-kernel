@@ -91,8 +91,11 @@ for any of:
 * **Zero hits** for "condition number" anywhere in Mathlib.
 * **No SVD, no `Matrix.singularValues`, no Eckart–Young, no
   distance-to-singularity** in Mathlib.
-* **No perturbation theory** in Mathlib: no Weyl inequalities, no
-  Courant–Fischer min-max, no Bauer–Fike, **no Gershgorin**.
+* **Perturbation theory in Mathlib** (re-verified 2026-07-28): no Weyl
+  *eigenvalue perturbation* inequality (the `Weyl` hits in Mathlib are all
+  Lie-theoretic — Weyl groups, weights, root systems), no Courant–Fischer
+  min-max, no Bauer–Fike. **Gershgorin IS present** — see the correction
+  below; the original entry here was FALSE.
 * Matrix operator norm exists but is **scoped and opt-in**
   (`Mathlib/Analysis/CStarAlgebra/Matrix.lean`, `Matrix.l2_opNorm_def`,
   the C*-identity `l2_opNorm_conjTranspose_mul_self`), under
@@ -199,3 +202,53 @@ This is absence of evidence from targeted web search plus direct inspection
 of Mathlib, not a proof of nonexistence. Any agent that finds a formalization
 contradicting S1 or S2 must report it immediately and amend `STATEMENTS.md`
 before further claims are made.
+
+---
+
+## CORRECTION — 2026-07-28 (STATEMENT-DEFECT class)
+
+**The claim "Mathlib has no Gershgorin" was FALSE.** Mathlib v4.32.0 contains
+`Mathlib/LinearAlgebra/Matrix/Gershgorin.lean` (ported from mathlib3), with:
+
+* `Matrix.eigenvalue_mem_ball` — eigenvalue localisation over any
+  `NormedField`, any `Fintype` index;
+* `Matrix.det_ne_zero_of_sum_row_lt_diag` and `Matrix.det_ne_zero_of_sum_col_lt_diag`
+  — strict diagonal dominance ⟹ nonsingular.
+
+Consequences, applied:
+
+* `Conditioning/Gershgorin.lean`'s `gershgorin_disc` is a specialization of
+  `Matrix.eigenvalue_mem_ball` to `ℝ`/`Fin n`/real eigenvalues. **No novelty
+  claimed.**
+* `Conditioning/Checker.lean`'s `det_ne_zero_of_strict_diag_dominance`
+  duplicates `Matrix.det_ne_zero_of_sum_row_lt_diag` at weaker generality.
+  **No novelty claimed.**
+* `gershgorin_rayleigh_floor` **survives**, verified rather than assumed: the
+  Rayleigh quadratic-form floor `μ‖x‖² ≤ xᵀMx` under diagonal dominance is a
+  different statement from eigenvalue localisation, and Mathlib's Gershgorin
+  file contains exactly the three lemmas listed above and nothing else.
+
+**Root cause.** A sweep verdict is the one artifact in this repository that is
+*asserted* rather than kernel-checked. The comparator verifies statements and
+axioms; nothing verified the sweep. This absence claim was propagated from a
+subagent report into a verdict without an independent grep, and the method
+note then described a grep that had not been run.
+
+**Re-verification of every other absence claim in S1** (greps re-run
+2026-07-28 against the pinned Mathlib v4.32.0 checkout; file-hit counts):
+
+| term | hits | verdict |
+|---|---|---|
+| `condition number` / `conditionNumber` | 0 / 0 | absent, as claimed |
+| `Gershgorin` | **2** | **PRESENT — claim was false** |
+| `Courant` | 0 | absent, as claimed |
+| `Bauer`, `Fike` | 0, 0 | absent, as claimed |
+| `Eckart`, `Mirsky` | 0, 0 | absent from Mathlib, as claimed |
+| `svd` / `SVD` | 0 / 0 | absent, as claimed |
+| `singularValue` / `SingularValue` | 2 / 2 | present, as claimed |
+| `Weyl` | 13 | present but **Lie-theoretic only**; no eigenvalue perturbation inequality |
+
+**Process fix.** Absence claims are now machine-checked in CI by
+`comparator/sweep_check.py`, which re-runs these greps against the pinned
+Mathlib and fails the build if anything claimed absent is found. A false
+absence claim now breaks CI instead of surviving into prose.

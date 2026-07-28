@@ -5,7 +5,7 @@ landed).
 
 ## Proven (sorry-free, axioms exactly `[propext, Classical.choice, Quot.sound]`)
 
-### Engine — `Conditioning/Gershgorin.lean` (Mathlib has no Gershgorin)
+### Engine — `Conditioning/Gershgorin.lean` (Mathlib HAS Gershgorin; see SWEEP.md correction 2026-07-28)
 
 * `gershgorin_rayleigh_floor` — diagonal dominance with margin `μ` gives
   `μ‖x‖² ≤ xᵀMx` for real symmetric `M`. No sign assumption on `μ`. Proved

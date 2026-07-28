@@ -185,6 +185,10 @@ theorem discCheck_abs_eigenvalue (A : Matrix (Fin n) (Fin n) ℚ) (c : ℚ)
 
 /-- Strict diagonal dominance certifies nonsingularity (Levy–Desplanques),
 derived from the circle theorem proved in `Gershgorin.lean`. -/
+-- NO NOVELTY CLAIMED: this is `Matrix.det_ne_zero_of_sum_row_lt_diag`
+-- (`Mathlib/LinearAlgebra/Matrix/Gershgorin.lean`) at strictly weaker
+-- generality — Mathlib states it over any `NormedField` and any `Fintype`.
+-- Retained for the local `ℝ`/`Fin n` interface. Corrected 2026-07-28.
 theorem det_ne_zero_of_strict_diag_dominance (M : Matrix (Fin n) (Fin n) ℝ)
     (h : ∀ i, gershRadius M i < |M i i|) : M.det ≠ 0 := by
   intro hdet

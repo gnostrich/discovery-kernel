@@ -1,0 +1,54 @@
+# Machine-checked prior-art claims about the PINNED Mathlib.
+#
+# Every claim of the form "Mathlib does not have X" that appears anywhere in
+# this repository's prose MUST be registered here, and is re-verified by
+# `comparator/sweep_check.py` in CI.
+#
+# Why this file exists: on 2026-07-28 the sweep claim "Mathlib has no
+# Gershgorin" was found to be FALSE — `Mathlib/LinearAlgebra/Matrix/
+# Gershgorin.lean` exists and has existed since the mathlib3 port. The claim
+# had been propagated from a subagent report into a sweep verdict without an
+# independent grep, and the sweep's own method note described a grep that was
+# never run. A sweep verdict was the one artifact in this repository that was
+# *asserted* rather than kernel-checked. This file closes that hole: a false
+# absence claim now fails the build.
+
+# Terms that MUST NOT appear anywhere in the pinned Mathlib.
+# `term` is matched case-insensitively against file contents.
+[[absent]]
+term = "condition number"
+claim = "Mathlib has no condition-number theory (Conditioning/SWEEP.md S1)."
+
+[[absent]]
+term = "conditionNumber"
+claim = "No conditionNumber identifier in Mathlib."
+
+[[absent]]
+term = "Courant"
+claim = "No Courant-Fischer min-max in Mathlib (Conditioning/SWEEP.md S1)."
+
+[[absent]]
+term = "Bauer-Fike"
+claim = "No Bauer-Fike in Mathlib."
+
+[[absent]]
+term = "Eckart"
+claim = "Eckart-Young is not in Mathlib (it exists in a third-party Lean 4 library; see SWEEP.md S1)."
+
+[[absent]]
+term = "Mirsky"
+claim = "Eckart-Young-Mirsky is not in Mathlib."
+
+# Terms that MUST appear in the pinned Mathlib. Registering the positive side
+# too, so that a dependency disappearing under a repin is also caught.
+[[present]]
+term = "Gershgorin"
+claim = "Mathlib HAS Gershgorin: Matrix.eigenvalue_mem_ball, Matrix.det_ne_zero_of_sum_row_lt_diag. We claim no novelty for these."
+
+[[present]]
+term = "singularValues"
+claim = "Mathlib has LinearMap.singularValues (Analysis/InnerProductSpace/SingularValues.lean)."
+
+[[present]]
+term = "l2_opNorm"
+claim = "Mathlib has the scoped l2 operator norm used by cond_dist_to_illposed."
