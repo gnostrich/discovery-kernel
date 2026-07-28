@@ -161,8 +161,12 @@ prefers toolchain v4.28.0 while we pin v4.32.0.)
   is in namespace `Matrix` but **`dotProduct` is at root** — `simp only
   [Matrix.mulVec, dotProduct]`, and `Matrix.dotProduct` does not exist. Triple
   sums reorder with `Finset.sum_comm` applied inner-first via `simp_rw`.
-* 2026-07-27 — `Gershgorin.lean` landed, **both** forms proved from scratch
-  (Mathlib has no Gershgorin at v4.32.0). The Rayleigh floor's only real trick
+* 2026-07-27 — `Gershgorin.lean` landed, both forms proved locally.
+* 2026-07-28 — **CORRECTION (STATEMENT-DEFECT):** the premise of the line
+  above was FALSE. Mathlib HAS Gershgorin
+  (`Mathlib/LinearAlgebra/Matrix/Gershgorin.lean`). `gershgorin_disc` and
+  `det_ne_zero_of_strict_diag_dominance` duplicate it at weaker generality and
+  now claim no novelty; `gershgorin_rayleigh_floor` survives (verified). The Rayleigh floor's only real trick
   is the symmetrization swap `∑ᵢ∑_{j≠i}|Mᵢⱼ|xⱼ² = ∑ᵢ∑_{j≠i}|Mᵢⱼ|xᵢ²`, done by
   rewriting `erase`-sums as `if`-sums (`Finset.filter_ne'` + `Finset.sum_filter`)
   and applying `Finset.sum_comm`. The pointwise bound wants the explicit SOS

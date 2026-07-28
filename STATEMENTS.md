@@ -92,8 +92,7 @@ claim it).
 * `ov_cnt_recovers_scalar` — **PROVEN**. The sanity condition: at `B = ℝ` the lift is
   obliged to return exactly `λ_min(xᵀx)`.
 * `ov_dist_not_element_valued` — **PROVEN**. The tier's decisive negative, in registry
-  form. TARGET (the general reduction is proved; the `M₂(ℝ)` witness instance
-  is the remaining machine-checked step).
+  form, machine-checked end to end (Kadison anti-lattice witness).
 * `ov_lojasiewicz_order` — **PROVEN**. **FALLBACK form** (STEERING 02a): the symbolic
   order-of-vanishing statement, needing no metric — only a discriminant, a
   deformation, and a per-direction integer order.
@@ -268,6 +267,45 @@ Per STEERING 02, sorries are classified:
   `realization-lean` is not a dependency of this repository.
 * **No claim to prove the operator-valued license.** See the sorry
   classification above.
+
+## Corrections
+
+### 2026-07-28 — STATEMENT-DEFECT: false prior-art claim (Gershgorin)
+
+**The claim "Mathlib has no Gershgorin theorem" was FALSE.** Mathlib v4.32.0
+contains `Mathlib/LinearAlgebra/Matrix/Gershgorin.lean`, with
+`Matrix.eigenvalue_mem_ball` (eigenvalue localisation over any `NormedField`,
+any `Fintype`) and `Matrix.det_ne_zero_of_sum_row_lt_diag` /
+`..._col_lt_diag`. The claim appeared in `README.md`, `FINAL-STATUS.md`,
+`Conditioning/SWEEP.md`, `Conditioning/Gershgorin.lean`,
+`Conditioning/TIER-STATUS.md` and `Conditioning/AGENTS.md`; all are corrected.
+
+**What this changes about our claims.** We claim **no novelty** for eigenvalue
+localisation (`Cond.gershgorin_disc` is a specialization of Mathlib's theorem
+to `ℝ`/`Fin n`/real eigenvalues) or for diagonal-dominance nonsingularity
+(`Cond.det_ne_zero_of_strict_diag_dominance` duplicates
+`Matrix.det_ne_zero_of_sum_row_lt_diag` at weaker generality).
+`Cond.gershgorin_rayleigh_floor` — the Rayleigh quadratic-form lower bound
+`μ‖x‖² ≤ xᵀMx` under diagonal dominance — **survives**, verified rather than
+assumed: Mathlib's Gershgorin file contains exactly the three lemmas above and
+nothing else. **No headline statement changes**: no registry statement
+depended on owning Gershgorin, and all 14 proven headlines remain proven with
+unchanged statements and unchanged axioms.
+
+**Root cause.** A sweep verdict was the one artifact in this repository that
+was *asserted* rather than kernel-checked. This absence claim was propagated
+from a subagent's report into a sweep verdict without an independent grep, and
+`SWEEP.md`'s method note then listed a "Gershgorin" grep that had never been
+run. The `sorry`/axiom discipline could not catch it, because a false claim
+about the *outside world* is invisible to the kernel.
+
+**Process fix, applied.** Every absence and presence claim about the pinned
+Mathlib is now registered in `comparator/absence-claims.toml` and re-verified
+in CI by `comparator/sweep_check.py`, which fails the build if a claimed
+absence is found (negative-tested against this exact claim). All other absence
+claims in S1 were re-run and hold: `condition number` 0 hits, `Courant` 0,
+`Bauer`/`Fike` 0, `Eckart`/`Mirsky` 0, SVD 0; `Weyl` hits are Lie-theoretic
+only, not the eigenvalue perturbation inequality.
 
 ## Changelog
 

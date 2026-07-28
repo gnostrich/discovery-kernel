@@ -22,5 +22,8 @@ jobs:
       - name: Build
         run: lake build
 
+      - name: Prior-art claim guard
+        run: python3 comparator/sweep_check.py
+
       - name: Comparator
         run: python3 comparator/comparator.py

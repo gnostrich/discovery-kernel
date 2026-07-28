@@ -4,8 +4,28 @@ Released under the MIT license as described in the file LICENSE.
 
 # The Gershgorin / diagonal-dominance engine
 
-Mathlib v4.32.0 has **no Gershgorin theorem** (verified in `Conditioning/SWEEP.md`),
-so the engine is proved here from scratch. Two forms are given:
+Mathlib **does** have Gershgorin, in `Mathlib/LinearAlgebra/Matrix/Gershgorin.lean`
+(ported from mathlib3): `Matrix.eigenvalue_mem_ball` (eigenvalue localisation,
+over any `NormedField` and any `Fintype` index), together with
+`Matrix.det_ne_zero_of_sum_row_lt_diag` and `..._col_lt_diag` (strict diagonal
+dominance ⟹ nonsingular). An earlier version of this file claimed the opposite;
+that claim was FALSE and is corrected here (2026-07-28, STATEMENT-DEFECT — see
+STATEMENTS.md and Conditioning/SWEEP.md).
+
+We therefore claim **no novelty** for eigenvalue localisation or for the
+diagonal-dominance nonsingularity lemma. What this file retains:
+
+* `gershgorin_rayleigh_floor` — a *Rayleigh quadratic-form* lower bound
+  `μ * ‖x‖² ≤ xᵀMx` under diagonal dominance. This is a different statement
+  from eigenvalue localisation, and it is **not** in Mathlib's Gershgorin file
+  (verified 2026-07-28: that file contains exactly `eigenvalue_mem_ball`,
+  `det_ne_zero_of_sum_row_lt_diag`, `det_ne_zero_of_sum_col_lt_diag`). It is
+  the form the checker actually consumes.
+* `gershgorin_disc` — a specialization of `Matrix.eigenvalue_mem_ball` to `ℝ`,
+  `Fin n` and the `IsEigenvalue` shape used downstream. Retained for interface
+  convenience only; it duplicates Mathlib at strictly weaker generality.
+
+Two forms are given:
 
 * `gershgorin_rayleigh_floor` — the **Rayleigh floor**: strict diagonal
   dominance with margin `μ` gives `μ‖x‖² ≤ xᵀMx` for symmetric `M`. This is the
@@ -114,8 +134,14 @@ theorem gershgorin_rayleigh_floor (M : Matrix (Fin n) (Fin n) ℝ)
 eigenvalue of an arbitrary square real matrix lies within `gershRadius M i` of
 the diagonal entry `M i i` for some `i`. No symmetry is needed.
 
-Proved by the classical maximal-coordinate argument. Mathlib has no Gershgorin
-theorem of any kind at v4.32.0. -/
+Proved by the classical maximal-coordinate argument.
+
+**No novelty claimed.** This is `Matrix.eigenvalue_mem_ball`
+(`Mathlib/LinearAlgebra/Matrix/Gershgorin.lean`) specialized to `ℝ`, `Fin n`
+and real eigenvalues; Mathlib's version is strictly more general (any
+`NormedField`, any `Fintype`). Retained only because downstream code is stated
+against the local `IsEigenvalue` shape. An earlier docstring asserted Mathlib
+had no Gershgorin theorem; that was FALSE (corrected 2026-07-28). -/
 theorem gershgorin_disc (M : Matrix (Fin n) (Fin n) ℝ) (l : ℝ)
     (hl : IsEigenvalue M l) : ∃ i : Fin n, |l - M i i| ≤ gershRadius M i := by
   obtain ⟨v, hv, hMv⟩ := hl

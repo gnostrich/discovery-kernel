@@ -31,8 +31,8 @@ This repository certifies such margins at three altitudes — the scalar theory
 | `cond_margin_sharp` | `Cond.diag_dist_exact` | proven (sharpness witness) |
 | `cond_gershgorin_wall` | `Cond.gershgorin_wall` | proven (sharpness witness) |
 
-Six modules, zero sorries. Gershgorin was **built from scratch** (Mathlib has
-none) and run on the **exact rational Gram matrix** `AᵀA`, which covers
+Six modules, zero sorries. The engine runs on the **exact rational Gram
+matrix** `AᵀA`, which covers
 arbitrary square matrices and **avoids Eckart–Young entirely** — deliberate,
 since sweep S1 found that theorem already formalized in Lean 4 elsewhere.
 The headline certifies a lower bound on Mathlib's own `Metric.infDist` in
@@ -170,7 +170,15 @@ requested**. `sorryAx` is fatal for solutions and appears in none.
 5. **Conditioning section placed first** in `Challenge.lean` — which claim
    leads is itself a claim.
 6. **OV element-valued thesis recorded as refuted**, with the proof.
-7. **R3/OV statements signed off and landed** (2026-07-28): the disproved
+7. **CORRECTION 2026-07-28 (STATEMENT-DEFECT).** The claim "Mathlib has no
+   Gershgorin" was FALSE — `Mathlib/LinearAlgebra/Matrix/Gershgorin.lean`
+   exists (`Matrix.eigenvalue_mem_ball`, `det_ne_zero_of_sum_row_lt_diag`).
+   All surfaces corrected; no novelty is claimed for eigenvalue localisation
+   or diagonal-dominance nonsingularity. The Rayleigh quadratic-form floor
+   survives, verified. Root cause: a sweep verdict is asserted, not
+   kernel-checked; absence claims are now CI-guarded by
+   `comparator/sweep_check.py`. See `Conditioning/SWEEP.md`.
+8. **R3/OV statements signed off and landed** (2026-07-28): the disproved
    `ov_license` replaced by the refined chain, the `True` placeholder
    `ov_completeness` replaced by a real statement, and four statements added
    (PRIMARY metric CNT in `B`-valued form, its scalar sanity condition, the
