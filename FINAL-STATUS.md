@@ -53,7 +53,17 @@ not depend on the pivot strategy. `DEPS.md` records all three sweep verdicts,
 including the **prior-art negative**: no PSLQ/HJLS/integer-relation
 formalization was found in any proof assistant.
 
-### OV (lift) — statements only; founding thesis REFUTED, and that is the result
+### OV (lift) — six statements SIGNED OFF and live in the registry (2026-07-28)
+
+`ov_license` is DECLARED-OPEN (the MSY frontier). The other five are
+**TARGETS**, under active proof: `ov_completeness`,
+`ov_condition_number_theorem` (PRIMARY metric form), `ov_cnt_recovers_scalar`,
+`ov_dist_not_element_valued`, `ov_lojasiewicz_order` (FALLBACK symbolic form).
+The FREEZE-0 `ov_license` draft was **replaced, not weakened** — it was proved
+false as stated, and leaving a disproved statement in the registry was the
+worse option.
+
+#### Founding thesis REFUTED, and that is the result
 
 `OV/Cond.lean` is proven and sorry-free. The tier was opened on the thesis
 that the operator-valued condition number is *an element of `B`*. Tested
@@ -148,6 +158,12 @@ requested**. `sorryAx` is fatal for solutions and appears in none.
 5. **Conditioning section placed first** in `Challenge.lean` — which claim
    leads is itself a claim.
 6. **OV element-valued thesis recorded as refuted**, with the proof.
+7. **R3/OV statements signed off and landed** (2026-07-28): the disproved
+   `ov_license` replaced by the refined chain, the `True` placeholder
+   `ov_completeness` replaced by a real statement, and four statements added
+   (PRIMARY metric CNT in `B`-valued form, its scalar sanity condition, the
+   element-valued negative, the FALLBACK symbolic Łojasiewicz form). Registry
+   grew from 11 to 15 headlines; the 9 proven solutions are unaffected.
 
 ## What we do not claim
 
