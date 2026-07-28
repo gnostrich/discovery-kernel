@@ -4,8 +4,9 @@ Date: **2026-07-28**. Toolchain: Lean 4 `v4.32.0`, Mathlib `v4.32.0` (pinned
 in `lake-manifest.json`). CI: `lake build` + `comparator/comparator.py` on
 every push and PR.
 
-**Repository state: 9 of 9 required headlines proven; 15 headlines in the
-registry; comparator PASS; CI green.** No `Float`, no `native_decide`, no allowlist extension anywhere in
+**Repository state: 14 of 15 registry headlines proven and audited; comparator
+PASS; CI green.** The one unproven headline, `ov_license`, is DECLARED-OPEN by
+design (the Mai–Speicher–Yin frontier) and is not claimed. No `Float`, no `native_decide`, no allowlist extension anywhere in
 the repository. Every proven solution depends on exactly
 `[propext, Classical.choice, Quot.sound]`.
 
@@ -53,15 +54,25 @@ not depend on the pivot strategy. `DEPS.md` records all three sweep verdicts,
 including the **prior-art negative**: no PSLQ/HJLS/integer-relation
 formalization was found in any proof assistant.
 
-### OV (lift) — six statements SIGNED OFF and live in the registry (2026-07-28)
+### OV (lift) — 5 of 6 PROVEN (2026-07-28)
 
-`ov_license` is DECLARED-OPEN (the MSY frontier). The other five are
-**TARGETS**, under active proof: `ov_completeness`,
-`ov_condition_number_theorem` (PRIMARY metric form), `ov_cnt_recovers_scalar`,
-`ov_dist_not_element_valued`, `ov_lojasiewicz_order` (FALLBACK symbolic form).
+| headline | solution | state |
+|---|---|---|
+| `ov_completeness` | `R3.ov_completeness_of_starModule` | proven (hypothesis added, disclosed) |
+| `ov_condition_number_theorem` | `R3.ov_condition_number_theorem` | proven (PRIMARY metric form) |
+| `ov_cnt_recovers_scalar` | `R3.ov_cnt_recovers_scalar` | proven |
+| `ov_dist_not_element_valued` | `R3.ov_dist_not_element_valued` | proven (the decisive negative) |
+| `ov_lojasiewicz_order` | `R3.ov_lojasiewicz_order` | proven (FALLBACK symbolic form) |
+| `ov_license` | — | **DECLARED-OPEN** (MSY frontier, not claimed) |
+
 The FREEZE-0 `ov_license` draft was **replaced, not weakened** — it was proved
 false as stated, and leaving a disproved statement in the registry was the
-worse option.
+worse option. `ov_completeness` carries an added `[StarModule ℂ A]`, a
+disclosed weakening: it was *proved* that the axiom is not derivable from
+`[Ring] [StarRing] [Algebra ℂ]` (`R3.star_algebraMap_not_in_range`), and no
+counterexample to the unhypothesised form is known. Notably
+`ov_cnt_recovers_scalar` did **not** need Courant–Fischer, discharging the
+sweep-S1 dependency flagged for it.
 
 #### Founding thesis REFUTED, and that is the result
 
@@ -135,9 +146,7 @@ requested**. `sorryAx` is fatal for solutions and appears in none.
   by construction. `Challenge.lean` is a statement registry, never a proof
   site; solutions live tier-side and are matched by definitional equality.
   These are not open problems.
-* **OV targets** — 5 of the 6 signed-off OV statements have no solution yet
-  and are labelled **TARGET** in `OV/TIER-STATUS.md`: they are intended to be
-  proven and are under active work. `ov_license` alone is **DECLARED-OPEN**
+* **`ov_license`** is the single headline without a solution: **DECLARED-OPEN**
   (the Mai–Speicher–Yin frontier); we do not claim it.
 * **No other sorries exist in the repository.** The proved OV supporting
   layers (`OV/Cond.lean`, `OV/Symbolic.lean`), which carry both collapse-test
