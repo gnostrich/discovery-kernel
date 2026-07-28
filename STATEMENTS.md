@@ -65,28 +65,37 @@ precision, `M` the coefficient bound, `n * M * p` the certified margin, and
 the separation hypothesis is the statement that the input is at distance more
 than that margin from `Σ`.
 
-### OV — operator-valued lift (STATEMENTS ONLY, under human-review gate)
+### OV — operator-valued lift (STATEMENTS ONLY)
 
-```lean
-theorem ov_license
-    {B : Type} [Ring B] (M : ℕ → B) :
-    (R3.HasFiniteOVHankelRank B M ↔ R3.HasFiniteRealization B M) ∧
-      (R3.HasFiniteRealization B M ↔ R3.IsFinitelyAtomicOV B M) := sorry
-```
-**DECLARED DEFECTIVE, AWAITING REPLACEMENT.** This FREEZE-0 draft is *false*
-as stated, not merely imprecise: unconditional `rational ⟺ atomic` fails on
-`M n = cos nθ` over `ℝ` and on the Jordan block `n·λⁿ` over `ℂ`, and the
-span-of-shifts rank definition has a Noetherian gap against realizations. A
-corrected replacement (positivity hypotheses, star-corrected atomicity,
-Fliess stable-submodule rank) compiles in `OV/CHALLENGE-R3.proposed.lean`
-and is **approved in direction, awaiting human sign-off on exact statements**
-before entering `Challenge.lean`.
+Six statements, signed off by the operator on 2026-07-28. The FREEZE-0
+`ov_license` draft was **replaced, not weakened**: it was proved *false* as
+stated (unconditional `rational ⟺ atomic` fails on `M n = cos nθ` over `ℝ` and
+on the Jordan block `n·λⁿ` over `ℂ`), and its rank definition had a Noetherian
+gap against realizations. The refined chain adds positivity hypotheses
+(`IsOVMomentSequence` over a `StarOrderedRing`), star-corrects atomicity, and
+uses the Fliess stable-submodule rank.
 
-```lean
-theorem ov_completeness : True := sorry
-```
-**PLACEHOLDER**, replacement drafted in `OV/CHALLENGE-R3.proposed.lean`
-under the same gate.
+Sorry status: `ov_license` is **DECLARED-OPEN** (the MSY frontier; we do not
+claim it). The other five are **TARGETS** — intended to be proven, no timeline
+claimed.
+
+* `ov_license` — the MSY-shaped chain, now with the hypotheses that make it
+  theorem-shaped. DECLARED-OPEN.
+* `ov_completeness` — free-Ax–Schanuel-shaped, upgraded from the `True`
+  placeholder: a rank drop in the word-indexed `E`-moment data implies a
+  nonzero noncommutative polynomial annihilating the tuple, with faithfulness
+  of `E` as the genericity parameter. Non-vacuous (fails for `E = 0`). TARGET.
+* `ov_condition_number_theorem` — **PRIMARY form**: Demmel's theorem with the
+  distance valued in `B`, algebraic and geometric readings identified. The `⇒`
+  direction is already proved in `OV/Cond.lean`. TARGET.
+* `ov_cnt_recovers_scalar` — the sanity condition: at `B = ℝ` the lift is
+  obliged to return exactly `λ_min(xᵀx)`. TARGET.
+* `ov_dist_not_element_valued` — the tier's decisive negative, in registry
+  form. TARGET (the general reduction is proved; the `M₂(ℝ)` witness instance
+  is the remaining machine-checked step).
+* `ov_lojasiewicz_order` — **FALLBACK form** (STEERING 02a): the symbolic
+  order-of-vanishing statement, needing no metric — only a discriminant, a
+  deformation, and a per-direction integer order. TARGET.
 
 #### Collapse test: result of the operator lift (PROVED, not proposed)
 
@@ -304,6 +313,14 @@ Per STEERING 02, sorries are classified:
   Eckart–Young entirely** — deliberately, because sweep S1 found that theorem
   already formalized in Lean 4 elsewhere. Nothing in this tier claims or uses
   it.
+* 2026-07-28 — **R3/OV statements signed off and landed in the registry.**
+  The defective FREEZE-0 `ov_license` was replaced by the refined chain, the
+  `True` placeholder `ov_completeness` by a real statement, and four further
+  statements added: the PRIMARY metric Condition Number Theorem in `B`-valued
+  form, its scalar sanity condition, the element-valued negative, and the
+  FALLBACK symbolic Łojasiewicz form. `ov_license` is declared-open; the other
+  five are targets. Justification: leaving a statement proved false in the
+  registry is worse than any churn from replacing it.
 * 2026-07-27 — **OV element-valued thesis refuted** (proved, see the OV
   section). The tier's founding claim — that the operator-valued condition
   number is an element of `B` — is disproved for every factor; `dist_B` is a

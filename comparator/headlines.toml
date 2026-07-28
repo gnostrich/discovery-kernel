@@ -95,3 +95,35 @@ solution = ""
 module = ""
 proven_required = false
 tier = "R3"
+
+[[headline]]
+name = "ov_condition_number_theorem"
+challenge = "DiscoveryKernels.Challenge.ov_condition_number_theorem"
+solution = ""
+module = ""
+proven_required = false
+tier = "R3"
+
+[[headline]]
+name = "ov_cnt_recovers_scalar"
+challenge = "DiscoveryKernels.Challenge.ov_cnt_recovers_scalar"
+solution = ""
+module = ""
+proven_required = false
+tier = "R3"
+
+[[headline]]
+name = "ov_dist_not_element_valued"
+challenge = "DiscoveryKernels.Challenge.ov_dist_not_element_valued"
+solution = ""
+module = ""
+proven_required = false
+tier = "R3"
+
+[[headline]]
+name = "ov_lojasiewicz_order"
+challenge = "DiscoveryKernels.Challenge.ov_lojasiewicz_order"
+solution = ""
+module = ""
+proven_required = false
+tier = "R3"
